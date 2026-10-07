@@ -23,7 +23,14 @@ export default apiHandler(
         getDrop(redis, username),
         redis.smembers<string[]>(redisKeys.agent.matchSeen(username)),
       ]);
-      res.status(200).json({ drop, past: past ?? [] });
+      // Heal a mutual accept whose room creation failed: retry it on view.
+      const healed =
+        drop?.myResponse === "accepted" &&
+        drop.partnerResponse === "accepted" &&
+        !drop.roomId
+          ? await respondToDrop(redis, username, "accept")
+          : drop;
+      res.status(200).json({ drop: healed, past: past ?? [] });
       return;
     }
 

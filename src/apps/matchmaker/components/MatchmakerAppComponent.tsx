@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useChat, type UIMessage } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
@@ -62,6 +62,9 @@ export function MatchmakerAppComponent({
   const [drop, setDrop] = useState<MatchDrop | null>(null);
   const [past, setPast] = useState<string[]>([]);
   const [draftText, setDraftText] = useState("");
+  // Unsaved edits in the Profile textarea win over server refreshes (e.g. the
+  // one after each interview turn) until the user approves.
+  const draftDirtyRef = useRef(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -70,7 +73,9 @@ export function MatchmakerAppComponent({
     try {
       const [p, d] = await Promise.all([getMatchProfile(), getMatchDrop()]);
       setProfile(p.profile);
-      setDraftText(p.profile.draft ?? p.profile.approved ?? "");
+      if (!draftDirtyRef.current) {
+        setDraftText(p.profile.draft ?? p.profile.approved ?? "");
+      }
       setDrop(d.drop);
       setPast(d.past);
       setError(null);
@@ -273,7 +278,10 @@ export function MatchmakerAppComponent({
       <p className="text-neutral-500">{t("apps.matchmaker.profile.hint")}</p>
       <OsTextarea
         value={draftText}
-        onChange={(e) => setDraftText(e.target.value)}
+        onChange={(e) => {
+          draftDirtyRef.current = true;
+          setDraftText(e.target.value);
+        }}
         maxLength={600}
         rows={6}
         placeholder={t("apps.matchmaker.profile.placeholder")}
@@ -285,7 +293,12 @@ export function MatchmakerAppComponent({
         <Button
           variant="default"
           disabled={busy || draftText.trim().length < 20}
-          onClick={() => run(async () => setProfile((await updateMatchProfile({ action: "approve", text: draftText })).profile))}
+          onClick={() =>
+            run(async () => {
+              setProfile((await updateMatchProfile({ action: "approve", text: draftText })).profile);
+              draftDirtyRef.current = false;
+            })
+          }
         >
           {profile?.approved && profile.approved === draftText.trim()
             ? t("apps.matchmaker.profile.approved")
@@ -308,6 +321,7 @@ export function MatchmakerAppComponent({
             onClick={() =>
               run(async () => {
                 await leaveMatchmaker();
+                draftDirtyRef.current = false;
                 await refresh();
               })
             }

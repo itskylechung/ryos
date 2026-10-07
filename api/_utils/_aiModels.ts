@@ -46,13 +46,24 @@ export type ModelReasoningLevel =
   | "high"
   | "xhigh";
 
+/**
+ * Server-internal models: used by specific features, never user-selectable
+ * (so they stay out of `AI_MODELS` / the model picker).
+ */
+export const INTERNAL_MODEL_IDS = ["gpt-6-luna"] as const;
+export type InternalModelId = (typeof INTERNAL_MODEL_IDS)[number];
+/** Any model id the server may run: user-selectable or internal. */
+export type ServerModelId = SupportedModel | InternalModelId;
+
 const MODEL_REASONING_BY_MODEL: Partial<
-  Record<SupportedModel, ModelReasoningLevel>
+  Record<ServerModelId, ModelReasoningLevel>
 > = {
   // gpt-5.5 defaults to extended reasoning; disable for chat latency/cost.
   "gpt-5.5": "none",
   // GPT-6 Astra does not support `none`; use the lowest documented effort.
   "gpt-6": "low",
+  // GPT-6 Luna (Matchmaker): verified with `low`; same family as Astra.
+  "gpt-6-luna": "low",
 };
 
 // Factory that returns a LanguageModel instance for the requested model
@@ -82,14 +93,14 @@ export const getModelInstance = (model: SupportedModel): LanguageModel => {
  * provider default. Returns undefined to leave the provider default alone.
  */
 export function getModelReasoning(
-  model: SupportedModel
+  model: ServerModelId
 ): ModelReasoningLevel | undefined {
   return MODEL_REASONING_BY_MODEL[model];
 }
 
-/** GPT-6 Astra rejects custom temperature / top_p. */
-export function modelSupportsTemperature(model: SupportedModel): boolean {
-  return model !== "gpt-6";
+/** GPT-6 Astra rejects custom temperature / top_p; treat Luna the same. */
+export function modelSupportsTemperature(model: ServerModelId): boolean {
+  return model !== "gpt-6" && model !== "gpt-6-luna";
 }
 
 export function getTelegramModel(

@@ -16,6 +16,7 @@ import { z } from "zod";
 import type { Redis } from "../_utils/redis.js";
 import { redisKeys } from "../../src/shared/redisKeys.js";
 import { MATCHMAKER_JUDGE_INSTRUCTIONS } from "../_utils/_aiPrompts.js";
+import type { InternalModelId } from "../_utils/_aiModels.js";
 import { escapeHTML } from "../_utils/_validation.js";
 import {
   addMessage,
@@ -39,8 +40,10 @@ export const MIN_MATCH_SCORE = 60;
 const DROP_COOLDOWN_MS = 6 * 24 * 60 * 60 * 1000;
 const DROP_TTL_SECONDS = 14 * 24 * 60 * 60;
 const JUDGE_CONCURRENCY = 8;
+/** Longer than any realistic run; only matters if a run crashes mid-way. */
+const DROP_LOCK_TTL_SECONDS = 60 * 60;
 /** One small OpenAI model for the whole Matchmaker (interview, tags, judge). */
-export const MATCHMAKER_MODEL_ID = "gpt-6-luna";
+export const MATCHMAKER_MODEL_ID = "gpt-6-luna" satisfies InternalModelId;
 const matchModel = () => openai(MATCHMAKER_MODEL_ID);
 
 export type MatchStatus = "none" | "active" | "paused";
@@ -105,18 +108,24 @@ export async function getProfile(
   redis: Redis,
   username: string
 ): Promise<MatchProfile> {
-  const raw = await redis.get(redisKeys.agent.matchProfile(username));
-  return parseStored<MatchProfile>(raw) ?? emptyProfile();
+  const [raw, draft] = await redis.mget<unknown>(
+    redisKeys.agent.matchProfile(username),
+    redisKeys.agent.matchDraft(username)
+  );
+  const profile = parseStored<MatchProfile>(raw) ?? emptyProfile();
+  return { ...profile, draft: typeof draft === "string" ? draft : profile.draft };
 }
 
+/** Writes status/approved/tags. The draft lives in its own key (saveDraft). */
 export async function saveProfile(
   redis: Redis,
   username: string,
   profile: MatchProfile
 ): Promise<void> {
+  const { draft: _draft, ...record } = profile;
   await redis.set(
     redisKeys.agent.matchProfile(username),
-    JSON.stringify({ ...profile, updatedAt: Date.now() })
+    JSON.stringify({ ...record, draft: null, updatedAt: Date.now() })
   );
   if (profile.status === "active" && profile.approved) {
     await redis.sadd(redisKeys.agent.matchPool(), username);
@@ -125,16 +134,16 @@ export async function saveProfile(
   }
 }
 
+/** Single-key write: can't clobber a concurrent approve/pause. */
 export async function saveDraft(
   redis: Redis,
   username: string,
   draft: string
 ): Promise<void> {
-  const profile = await getProfile(redis, username);
-  await saveProfile(redis, username, {
-    ...profile,
-    draft: draft.trim().slice(0, MAX_PROFILE_CHARS),
-  });
+  await redis.set(
+    redisKeys.agent.matchDraft(username),
+    draft.trim().slice(0, MAX_PROFILE_CHARS)
+  );
 }
 
 async function getStoredDrop(
@@ -174,12 +183,31 @@ async function saveDrop(
   });
 }
 
-/** Leave Matchmaker: drop profile + pending match, keep seen/blocked so blocks stick. */
+/**
+ * Remove the user's current match from BOTH sides: the partner's card holds a
+ * copy of this user's approved profile, and can never complete without them.
+ */
+async function dissolveCurrentMatch(redis: Redis, username: string) {
+  const mine = await getStoredDrop(redis, username);
+  if (!mine) return;
+  const theirs = await getStoredDrop(redis, mine.partner);
+  const keys = [
+    redisKeys.agent.matchDrop(username),
+    redisKeys.agent.matchPair(username, mine.partner, mine.createdAt),
+  ];
+  if (theirs?.partner === username && theirs.createdAt === mine.createdAt) {
+    keys.push(redisKeys.agent.matchDrop(mine.partner));
+  }
+  await redis.del(...keys);
+}
+
+/** Leave Matchmaker: drop profile + current match, keep seen/blocked so blocks stick. */
 export async function leaveMatchmaker(redis: Redis, username: string) {
   await redis.srem(redisKeys.agent.matchPool(), username);
+  await dissolveCurrentMatch(redis, username);
   await redis.del(
     redisKeys.agent.matchProfile(username),
-    redisKeys.agent.matchDrop(username)
+    redisKeys.agent.matchDraft(username)
   );
 }
 
@@ -189,8 +217,10 @@ export async function deleteAllMatchmakerData(
   username: string
 ): Promise<number> {
   await redis.srem(redisKeys.agent.matchPool(), username);
+  await dissolveCurrentMatch(redis, username);
   return redis.del(
     redisKeys.agent.matchProfile(username),
+    redisKeys.agent.matchDraft(username),
     redisKeys.agent.matchDrop(username),
     redisKeys.agent.matchSeen(username),
     redisKeys.agent.matchBlocked(username)
@@ -299,51 +329,114 @@ export interface WeeklyDropStats {
   poolSize: number;
   eligible: number;
   judged: number;
+  /** Candidate pairs dropped by the judge-call cap (0 = everyone judged). */
+  unjudged: number;
   matched: number;
   judgeErrors: number;
+}
+
+/**
+ * Candidate pairs in round-robin rank order: everyone's #1 candidate, then
+ * everyone's #2, ... so a judge-call cap trims everyone's long tail evenly
+ * instead of starving whoever comes last in pool order.
+ */
+export function rankedCandidatePairs(
+  shortlists: Array<{ username: string; candidates: string[] }>
+): Array<[string, string]> {
+  const seen = new Set<string>();
+  const pairs: Array<[string, string]> = [];
+  const depth = Math.max(0, ...shortlists.map((s) => s.candidates.length));
+  for (let rank = 0; rank < depth; rank++) {
+    for (const { username, candidates } of shortlists) {
+      const other = candidates[rank];
+      if (!other) continue;
+      const key = [username, other].sort().join("\n");
+      if (seen.has(key)) continue;
+      seen.add(key);
+      pairs.push([username, other]);
+    }
+  }
+  return pairs;
 }
 
 export async function runWeeklyDrop(
   redis: Redis,
   { maxJudgeCalls = 300, now = Date.now(), judge = judgePair } = {}
+): Promise<WeeklyDropStats | { skipped: "already-running" }> {
+  // One run at a time: a retried/overlapping run would compute its own
+  // pairings and overwrite drops, leaving mismatched halves.
+  const lockKey = redisKeys.agent.matchDropLock();
+  const locked = await redis.set(lockKey, String(now), {
+    nx: true,
+    ex: DROP_LOCK_TTL_SECONDS,
+  });
+  if (!locked) return { skipped: "already-running" };
+  try {
+    return await runWeeklyDropLocked(redis, { maxJudgeCalls, now, judge });
+  } finally {
+    await redis.del(lockKey);
+  }
+}
+
+async function runWeeklyDropLocked(
+  redis: Redis,
+  {
+    maxJudgeCalls,
+    now,
+    judge,
+  }: { maxJudgeCalls: number; now: number; judge: typeof judgePair }
 ): Promise<WeeklyDropStats> {
   const pool = await redis.smembers<string[]>(redisKeys.agent.matchPool());
-  const users: Array<{ username: string; profile: string; tags: string[] }> = [];
-  const excludedBy = new Map<string, Set<string>>();
-
-  for (const username of pool) {
-    const [profile, drop, seen, blocked] = await Promise.all([
-      getProfile(redis, username),
-      getDrop(redis, username),
-      redis.smembers<string[]>(redisKeys.agent.matchSeen(username)),
-      redis.smembers<string[]>(redisKeys.agent.matchBlocked(username)),
-    ]);
-    if (profile.status !== "active" || !profile.approved) continue;
-    if (drop && now - drop.createdAt < DROP_COOLDOWN_MS) continue;
-    users.push({ username, profile: profile.approved, tags: profile.tags });
-    excludedBy.set(username, new Set([...(seen ?? []), ...(blocked ?? [])]));
+  if (pool.length === 0) {
+    return { poolSize: 0, eligible: 0, judged: 0, unjudged: 0, matched: 0, judgeErrors: 0 };
   }
+
+  // Batched reads: profiles + drops in two round trips.
+  const [profiles, drops] = await Promise.all([
+    redis.mget<unknown>(...pool.map((u) => redisKeys.agent.matchProfile(u))),
+    redis.mget<unknown>(...pool.map((u) => redisKeys.agent.matchDrop(u))),
+  ]);
+  const users: Array<{ username: string; profile: string; tags: string[] }> = [];
+  pool.forEach((username, i) => {
+    const profile = parseStored<MatchProfile>(profiles[i]);
+    const drop = parseStored<StoredMatchDrop>(drops[i]);
+    if (profile?.status !== "active" || !profile.approved) return;
+    if (drop && now - drop.createdAt < DROP_COOLDOWN_MS) return;
+    users.push({ username, profile: profile.approved, tags: profile.tags });
+  });
+
+  // ponytail: one parallel burst of 2 SMEMBERS per eligible user; chunk it if
+  // pools reach the thousands.
+  const exclusions = await Promise.all(
+    users.map(({ username }) =>
+      Promise.all([
+        redis.smembers<string[]>(redisKeys.agent.matchSeen(username)),
+        redis.smembers<string[]>(redisKeys.agent.matchBlocked(username)),
+      ])
+    )
+  );
+  const excludedBy = new Map(
+    users.map((u, i) => [u.username, new Set(exclusions[i].flat())])
+  );
 
   // Exclusions are symmetric: if either side blocked/met the other, skip.
   const isExcluded = (a: string, b: string) =>
     excludedBy.get(a)?.has(b) || excludedBy.get(b)?.has(a);
 
-  const pairKeys = new Set<string>();
-  const candidatePairs: Array<[string, string]> = [];
-  for (const user of users) {
-    const excluded = new Set(
-      users.map((u) => u.username).filter((u) => isExcluded(user.username, u))
-    );
-    for (const other of shortlist(user.username, user.tags, users, excluded)) {
-      const key = [user.username, other].sort().join("\n");
-      if (pairKeys.has(key)) continue;
-      pairKeys.add(key);
-      candidatePairs.push([user.username, other]);
-    }
-  }
+  const candidatePairs = rankedCandidatePairs(
+    users.map((user) => ({
+      username: user.username,
+      candidates: shortlist(
+        user.username,
+        user.tags,
+        users,
+        new Set(users.map((u) => u.username).filter((u) => isExcluded(user.username, u)))
+      ),
+    }))
+  );
 
-  // ponytail: hard cap on judge calls per run; O(pool × shortlist). Batch by
-  // region/interest buckets if the pool outgrows it.
+  // ponytail: hard cap on judge calls per run; round-robin order keeps it
+  // fair. Batch by region/interest buckets if `unjudged` stays > 0.
   const toJudge = candidatePairs.slice(0, maxJudgeCalls);
   const byName = new Map(users.map((u) => [u.username, u]));
   const scored: ScoredPair[] = [];
@@ -384,6 +477,7 @@ export async function runWeeklyDrop(
     poolSize: pool.length,
     eligible: users.length,
     judged: scored.length,
+    unjudged: candidatePairs.length - toJudge.length,
     matched: matches.length,
     judgeErrors,
   };
@@ -422,14 +516,19 @@ export async function respondToDrop(
     !pair.roomId
   ) {
     // NX lock so a simultaneous double-accept opens exactly one room.
-    const won = await redis.set(
-      redisKeys.agent.matchRoomLock(username, partner, createdAt),
-      "1",
-      { nx: true, ex: DROP_TTL_SECONDS }
-    );
+    const lockKey = redisKeys.agent.matchRoomLock(username, partner, createdAt);
+    const won = await redis.set(lockKey, "1", { nx: true, ex: DROP_TTL_SECONDS });
     if (won) {
-      const roomId = await openRoom(redis, [username, partner], drop);
-      await redis.hset(pairKey, { roomId });
+      try {
+        const roomId = await openRoom(redis, [username, partner], drop);
+        await redis.hset(pairKey, { roomId });
+      } catch (error) {
+        // Release so the next accept/refresh can retry instead of waiting
+        // out the TTL. ponytail: a half-created room may be left behind;
+        // add cleanup if this ever fires in practice.
+        await redis.del(lockKey).catch(() => {});
+        throw error;
+      }
     }
   }
   return getDrop(redis, username);

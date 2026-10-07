@@ -104,9 +104,7 @@ export default apiHandler(
         `APPROVED PROFILE:\n${profile.approved ?? "(none)"}`,
     };
 
-    // Luna is a GPT-6 tier: reuse gpt-6's agent settings (low reasoning,
-    // no custom temperature) while running the smaller model.
-    const modelId = "gpt-6";
+    const modelId = MATCHMAKER_MODEL_ID;
     const agent = createRyoToolLoopAgent({
       preset: "matchmakerIntake",
       prepared: {
@@ -116,7 +114,7 @@ export default apiHandler(
         instructions: { role: "system", content: MATCHMAKER_INTAKE_INSTRUCTIONS },
         dynamicContextMessages: [context],
         toolsContext: {},
-        runtimeContext: { username, channel: "matchmaker", modelId: MATCHMAKER_MODEL_ID },
+        runtimeContext: { username, channel: "matchmaker", modelId },
       },
     });
 

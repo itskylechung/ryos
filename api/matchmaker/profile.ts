@@ -8,6 +8,7 @@
 
 import { z } from "zod";
 import { apiHandler } from "../_utils/api-handler.js";
+import * as RateLimit from "../_utils/_rate-limit.js";
 import { filterProfanityPreservingUrls } from "../_utils/_validation.js";
 import {
   extractTags,
@@ -15,6 +16,7 @@ import {
   leaveMatchmaker,
   MAX_PROFILE_CHARS,
   MIN_PROFILE_CHARS,
+  saveDraft,
   saveProfile,
 } from "./_lib.js";
 
@@ -52,6 +54,20 @@ export default apiHandler(
     const body = parsed.data;
     const profile = await getProfile(redis, username);
 
+    if (body.action === "approve") {
+      // Each approve runs an LLM call (tag extraction).
+      const rl = await RateLimit.checkBurstAndDailyLimits({
+        namespace: "matchmaker-approve",
+        identifierParts: ["user", username],
+        burst: { windowSeconds: 60, limit: 5 },
+        daily: { windowSeconds: 60 * 60 * 24, limit: 30 },
+      });
+      if (!rl.ok) {
+        res.status(429).json({ error: "rate_limit_exceeded", scope: rl.scope });
+        return;
+      }
+    }
+
     if (body.action === "pause") {
       await saveProfile(redis, username, { ...profile, status: "paused" });
     } else if (body.action === "resume") {
@@ -76,12 +92,15 @@ export default apiHandler(
         res.status(502).json({ error: "Could not process profile, try again" });
         return;
       }
+      // Re-read after the slow LLM call so a pause made meanwhile isn't lost,
+      // and keep a paused user paused (editing ≠ opting back in).
+      const latest = await getProfile(redis, username);
+      await saveDraft(redis, username, text);
       await saveProfile(redis, username, {
-        ...profile,
-        draft: text,
+        ...latest,
         approved: text,
         tags,
-        status: "active",
+        status: latest.status === "paused" ? "paused" : "active",
       });
     }
 

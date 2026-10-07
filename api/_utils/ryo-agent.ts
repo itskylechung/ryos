@@ -7,7 +7,11 @@ import {
   type ToolSet,
   type TimeoutConfiguration,
 } from "ai";
-import { getModelReasoning, modelSupportsTemperature } from "./_aiModels.js";
+import {
+  getModelReasoning,
+  modelSupportsTemperature,
+  type ServerModelId,
+} from "./_aiModels.js";
 import { addCacheControlToMessages } from "./ai-prompt-cache.js";
 import type {
   PreparedRyoConversation,
@@ -159,13 +163,12 @@ type RyoToolLoopAgentOptions = {
   prepared: Pick<
     PreparedRyoConversation,
     | "selectedModel"
-    | "modelId"
     | "tools"
     | "instructions"
     | "dynamicContextMessages"
     | "toolsContext"
     | "runtimeContext"
-  >;
+  > & { modelId: ServerModelId };
   temperature?: number;
   tools?: ToolSet;
   toolsContext?: PreparedRyoConversation["toolsContext"];

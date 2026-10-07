@@ -38,6 +38,14 @@ export default async function handler(
 
   try {
     const stats = await runWeeklyDrop(createRedis());
+    if ("skipped" in stats) {
+      logger.warn("Matchmaker drop skipped: previous run still in progress");
+      res.status(409).json({ success: false, ...stats });
+      return;
+    }
+    if (stats.unjudged > 0) {
+      logger.warn("Matchmaker drop hit the judge-call cap", { unjudged: stats.unjudged });
+    }
     logger.info("Matchmaker drop completed", { ...stats });
     logger.response(200, Date.now() - startTime);
     res.status(200).json({ success: true, ...stats });
