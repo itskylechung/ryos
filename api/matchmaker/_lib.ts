@@ -76,7 +76,9 @@ export interface ScoredPair {
   b: string;
   score: number;
   why: string;
-  opener: string;
+  /** Icebreaker in A's voice (shown on A's card), and vice versa. */
+  openerFromA: string;
+  openerFromB: string;
 }
 
 // ---------------------------------------------------------------------------
@@ -266,7 +268,8 @@ export async function extractTags(profile: string): Promise<string[]> {
 const judgeSchema = z.object({
   score: z.number().int().min(0).max(100),
   why: z.string().max(300),
-  opener: z.string().max(200),
+  openerFromA: z.string().max(200),
+  openerFromB: z.string().max(200),
 });
 
 // ponytail: single judge call per pair. Upgrade path (Ditto-style): simulate a
@@ -279,7 +282,7 @@ export async function judgePair(
     model: matchModel(),
     output: Output.object({ schema: judgeSchema }),
     instructions: MATCHMAKER_JUDGE_INSTRUCTIONS,
-    prompt: `PERSON A:\n${a.profile}\n\nPERSON B:\n${b.profile}`,
+    prompt: `A = @${a.username}:\n${a.profile}\n\nB = @${b.username}:\n${b.profile}`,
     reasoning: "low",
   });
   return { a: a.username, b: b.username, ...output };
@@ -355,17 +358,19 @@ export async function runWeeklyDrop(
 
   const matches = pairUp(scored);
   for (const m of matches) {
-    const base = { score: m.score, why: m.why, opener: m.opener, createdAt: now };
+    const base = { score: m.score, why: m.why, createdAt: now };
     await Promise.all([
       saveDrop(redis, m.a, {
         ...base,
         partner: m.b,
         partnerProfile: byName.get(m.b)!.profile,
+        opener: m.openerFromA,
       }),
       saveDrop(redis, m.b, {
         ...base,
         partner: m.a,
         partnerProfile: byName.get(m.a)!.profile,
+        opener: m.openerFromB,
       }),
       redis.sadd(redisKeys.agent.matchSeen(m.a), m.b),
       redis.sadd(redisKeys.agent.matchSeen(m.b), m.a),
@@ -430,7 +435,7 @@ export async function respondToDrop(
 async function openMatchRoom(
   redis: Redis,
   members: string[],
-  drop: Pick<MatchDrop, "why" | "opener">
+  drop: Pick<MatchDrop, "why">
 ): Promise<string> {
   const sorted = [...members].sort();
   const roomId = generateId();
@@ -452,7 +457,7 @@ async function openMatchRoom(
     roomId,
     username: "ryo",
     content: escapeHTML(
-      `matched you two this week 🤝 ${drop.why}\n\nicebreaker: ${drop.opener}`
+      `matched you two this week 🤝 ${drop.why}`
     ),
     timestamp: getCurrentTimestamp(),
   };

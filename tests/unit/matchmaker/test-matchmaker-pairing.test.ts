@@ -24,7 +24,7 @@ describe("matchmaker pairing", () => {
   });
 
   test("pairUp is greedy by score, one match per user, drops weak pairs", () => {
-    const p = (a: string, b: string, score: number) => ({ a, b, score, why: "", opener: "" });
+    const p = (a: string, b: string, score: number) => ({ a, b, score, why: "", openerFromA: "", openerFromB: "" });
     const result = pairUp([p("a", "b", 70), p("a", "c", 90), p("b", "d", 65), p("c", "d", 80), p("e", "f", 40)]);
     expect(result.map((r) => [r.a, r.b])).toEqual([["a", "c"], ["b", "d"]]);
   });

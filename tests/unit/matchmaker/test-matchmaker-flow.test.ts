@@ -40,7 +40,8 @@ const judge = async (a: { username: string }, b: { username: string }): Promise<
   b: b.username,
   score: a.username[0] === b.username[0] ? 90 : 30,
   why: "you both build things",
-  opener: "what are you building?",
+  openerFromA: `hi from ${a.username}`,
+  openerFromB: `hi from ${b.username}`,
 });
 
 describe("matchmaker weekly flow", () => {
@@ -54,6 +55,10 @@ describe("matchmaker weekly flow", () => {
     const stats = await runWeeklyDrop(redis, { judge });
     expect(stats).toMatchObject({ eligible: 3, matched: 1 });
     expect((await getDrop(redis, "ann"))?.partner).toBe("amy");
+    // Each side gets the icebreaker written in their own voice.
+    const pairOpeners = [(await getDrop(redis, "ann"))?.opener, (await getDrop(redis, "amy"))?.opener];
+    expect(pairOpeners.sort()).toEqual(["hi from amy", "hi from ann"]);
+    expect((await getDrop(redis, "ann"))?.opener).toMatch(/ann/);
     expect(await getDrop(redis, "bob")).toBeNull(); // weak match → no drop
     expect(await getDrop(redis, "pat")).toBeNull(); // paused → not paired
 
