@@ -211,6 +211,7 @@ export const APP_HELP_I18N_KEYS: Record<AppId, readonly string[]> = {
   ],
   calculator: [...CALCULATOR_HELP_I18N_KEYS],
   stuff: ["shelf", "scan", "tags", "prices", "share", "print"],
+  matchmaker: ["interview", "approve", "weeklyMatch", "doubleOptIn", "pauseLeave"],
 };
 
 /**

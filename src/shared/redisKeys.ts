@@ -310,6 +310,20 @@ export const redisKeys = {
       redisKeyCaseSensitive("agent", "cursor", "run", runId, "meta"),
     cursorLatestRun: (agentId: string) =>
       redisKeyCaseSensitive("agent", "cursor", "agent", agentId, "latest-run"),
+    matchProfile: (username: string) =>
+      redisKey("agent", "matchmaker", "user", username, "profile"),
+    matchDrop: (username: string) =>
+      redisKey("agent", "matchmaker", "user", username, "drop"),
+    matchSeen: (username: string) =>
+      redisKey("agent", "matchmaker", "user", username, "seen"),
+    matchBlocked: (username: string) =>
+      redisKey("agent", "matchmaker", "user", username, "blocked"),
+    matchPool: () => redisKey("agent", "matchmaker", "pool"),
+    /** Hash of `{ [username]: "accepted" | "declined", roomId }` for one weekly pair. */
+    matchPair: (a: string, b: string, createdAt: number) =>
+      redisKey("agent", "matchmaker", "pair", ...[a, b].sort(), createdAt),
+    matchRoomLock: (a: string, b: string, createdAt: number) =>
+      redisKey("agent", "matchmaker", "pair", ...[a, b].sort(), createdAt, "room-lock"),
   },
   system: {
     userHeartbeats: (username: string, date: string) =>

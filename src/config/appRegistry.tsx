@@ -187,6 +187,11 @@ const LazyCalculatorApp = createLazyComponent<unknown>(
   "calculator"
 );
 
+const LazyMatchmakerApp = createLazyComponent<unknown>(
+  () => import("@/apps/matchmaker/components/MatchmakerAppComponent").then(m => ({ default: m.MatchmakerAppComponent })),
+  "matchmaker"
+);
+
 const LazyStuffApp = createLazyComponent<StuffInitialData>(
   () =>
     import("@/apps/stuff/components/StuffAppComponent").then((m) => ({
@@ -235,6 +240,7 @@ import { appMetadata as mapsMetadata, helpItems as mapsHelpItems } from "@/apps/
 import { appMetadata as booksMetadata, helpItems as booksHelpItems } from "@/apps/books/metadata";
 import { appMetadata as calculatorMetadata, helpItems as calculatorHelpItems } from "@/apps/calculator/metadata";
 import { appMetadata as stuffMetadata, helpItems as stuffHelpItems } from "@/apps/stuff/metadata";
+import { appMetadata as matchmakerMetadata, helpItems as matchmakerHelpItems } from "@/apps/matchmaker/metadata";
 import { DEFAULT_WINDOW_SIZE_WITH_TITLEBAR as infiniteMacDefaultSize } from "@/apps/infinite-mac/windowConfig";
 import { DEFAULT_WINDOW_SIZE_WITH_TITLEBAR as infinitePcDefaultSize } from "@/apps/infinite-pc/windowConfig";
 
@@ -629,6 +635,19 @@ export const appRegistry = {
       // Leave room for sidebar (160) + shelf + ~266px side-drawer protrusion.
       defaultSize: { width: 920, height: 580 },
       minSize: { width: 560, height: 400 },
+    } as WindowConstraints,
+  },
+  ["matchmaker"]: {
+    id: "matchmaker",
+    name: "Matchmaker",
+    icon: { type: "image", src: matchmakerMetadata.icon },
+    description: "Weekly intros to people you should meet",
+    component: LazyMatchmakerApp,
+    helpItems: matchmakerHelpItems,
+    metadata: matchmakerMetadata,
+    windowConfig: {
+      defaultSize: { width: 420, height: 520 },
+      minSize: { width: 340, height: 400 },
     } as WindowConstraints,
   },
 } as const;

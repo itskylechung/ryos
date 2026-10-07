@@ -19,6 +19,7 @@ import { deleteAIConversationKeys } from "../../ai/conversations/_helpers/store.
 import { deleteAllAIAttachments } from "../../ai/attachments/_helpers/store.js";
 import { deleteAllUserMemories } from "../_memory.js";
 import { removeAllUserPushDevices } from "../push-relay.js";
+import { deleteAllMatchmakerData } from "../../matchmaker/_lib.js";
 
 export interface PurgeAccountResult {
   /** Approximate number of Redis keys removed. */
@@ -70,6 +71,9 @@ export async function purgeUserAccount(
 
   // APNs device rows.
   deletedCount += await removeAllUserPushDevices(redis, normalized).catch(() => 0);
+
+  // Matchmaker profile, pending match, seen/blocked lists.
+  deletedCount += await deleteAllMatchmakerData(redis, normalized).catch(() => 0);
 
   // Sync data.
   deletedCount += await redis

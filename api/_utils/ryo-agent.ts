@@ -110,6 +110,12 @@ export const RYO_AGENT_TIMEOUTS = {
       contactsControlMs: 15_000,
     },
   },
+  matchmakerIntake: {
+    totalMs: 90_000,
+    stepMs: 45_000,
+    chunkMs: 30_000,
+    toolMs: 10_000,
+  },
   telegramHeartbeat: {
     totalMs: 90_000,
     stepMs: 45_000,
@@ -133,6 +139,11 @@ export const RYO_AGENT_PRESETS = {
     id: "ryo-telegram",
     stopAfterSteps: 6,
     maxOutputTokens: 4000,
+  },
+  matchmakerIntake: {
+    id: "ryo-matchmaker-intake",
+    stopAfterSteps: 4,
+    maxOutputTokens: 2000,
   },
   telegramHeartbeat: {
     id: "ryo-telegram-heartbeat",

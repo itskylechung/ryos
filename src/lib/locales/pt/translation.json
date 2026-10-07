@@ -4934,6 +4934,77 @@
         "unknownArtist": "Artista Desconhecido"
       },
       "title": "Winamp"
+    },
+    "matchmaker": {
+      "name": "Matchmaker",
+      "title": "Matchmaker",
+      "description": "Apresentações semanais a pessoas que você deveria conhecer",
+      "signIn": "Inicie sessão para usar o Matchmaker",
+      "menu": {
+        "help": "Ajuda do Matchmaker",
+        "about": "Sobre o Matchmaker",
+        "refresh": "Atualizar"
+      },
+      "tabs": {
+        "week": "Esta semana",
+        "profile": "Perfil",
+        "interview": "Entrevista"
+      },
+      "week": {
+        "meet": "Conheça @{{username}}",
+        "why": "Por que vocês dois",
+        "opener": "Para quebrar o gelo",
+        "accept": "Dizer oi",
+        "pass": "Passar",
+        "block": "Bloquear",
+        "openChat": "Abrir conversa",
+        "waiting": "Você disse sim. Aguardando a outra pessoa…",
+        "youPassed": "Você passou este.",
+        "theyPassed": "A outra pessoa passou desta vez. Novo match na próxima semana.",
+        "intro": "Uma vez por semana, Ryo apresenta você a uma pessoa que você deveria conhecer: um amigo ou colaborador.",
+        "start": "Começar",
+        "inPool": "Você está participando. Seu próximo match chega esta semana.",
+        "paused": "Os matches estão pausados. Retome na aba Perfil."
+      },
+      "profile": {
+        "hint": "É isto que seu match vê. Nada é compartilhado até você aprovar.",
+        "placeholder": "O que você está construindo, o que te empolga, quem você gostaria de conhecer…",
+        "approve": "Aprovar",
+        "approved": "Aprovado ✓",
+        "pause": "Pausar",
+        "resume": "Retomar",
+        "leave": "Sair do Matchmaker"
+      },
+      "interview": {
+        "intro": "Ryo fará algumas perguntas e escreverá um rascunho do seu perfil. Você revisa antes de qualquer compartilhamento.",
+        "begin": "Iniciar",
+        "kickoff": "oi ryo, me ajuda a montar meu perfil de match",
+        "placeholder": "Responder ao Ryo…",
+        "send": "Enviar",
+        "draftSaved": "✎ rascunho atualizado — confira a aba Perfil"
+      },
+      "help": {
+        "interview": {
+          "title": "Entrevista",
+          "description": "Conte ao Ryo o que você está construindo e quem gostaria de conhecer"
+        },
+        "approve": {
+          "title": "Aprove seu perfil",
+          "description": "Ryo escreve um perfil curto; nada é compartilhado até você editar e aprovar"
+        },
+        "weeklyMatch": {
+          "title": "Match semanal",
+          "description": "Uma vez por semana Ryo apresenta uma pessoa e explica por que vocês deveriam se conhecer"
+        },
+        "doubleOptIn": {
+          "title": "Duplo consentimento",
+          "description": "Se os dois aceitarem, Ryo abre uma conversa privada com um assunto para quebrar o gelo"
+        },
+        "pauseLeave": {
+          "title": "Pausar ou sair",
+          "description": "Pause os matches quando quiser ou saia para apagar seu perfil"
+        }
+      }
     }
   },
   "common": {

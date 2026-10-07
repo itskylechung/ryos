@@ -83,6 +83,10 @@ graph TD
 | [`/api/audio-transcribe`](/docs/media-api) | Audio transcription |
 | [`/api/webhooks/telegram`](/docs/chat-api) | Telegram bot webhook for DM chat (image support, web search, AI tool execution) |
 | [`/api/cron/telegram-heartbeat`](/docs/chat-api) | AI-powered proactive heartbeat messages via Telegram (cron-triggered) |
+| `/api/matchmaker/chat` | Matchmaker intake interview (`matchmakerIntake` ToolLoopAgent preset, `saveMatchProfileDraft` tool, memory summaries pre-fill the draft) |
+| `/api/matchmaker/profile` | Get / approve (extracts tags, joins pool) / pause / resume / leave the match profile |
+| `/api/matchmaker/drop` | This week's match; accept / decline / block. Both accept → Ryo opens a private room with the intro |
+| `/api/cron/matchmaker-drop` | Weekly drop (`CRON_SECRET`): tag-overlap shortlist → LLM judge per pair → greedy pairing. Only approved profile text is ever matched on |
 | `/api/telegram/link/create` | Generate Telegram account linking code |
 | `/api/telegram/link/status` | Check Telegram link status |
 | `/api/telegram/link/disconnect` | Disconnect linked Telegram account |

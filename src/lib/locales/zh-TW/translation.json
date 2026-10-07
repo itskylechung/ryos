@@ -4930,6 +4930,77 @@
         "unknownArtist": "未知的藝人"
       },
       "title": "Winamp"
+    },
+    "matchmaker": {
+      "name": "Matchmaker",
+      "title": "Matchmaker",
+      "description": "每週為你介紹值得認識的人",
+      "signIn": "登入後即可使用 Matchmaker",
+      "menu": {
+        "help": "Matchmaker 輔助說明",
+        "about": "關於 Matchmaker",
+        "refresh": "重新整理"
+      },
+      "tabs": {
+        "week": "本週",
+        "profile": "個人檔案",
+        "interview": "訪談"
+      },
+      "week": {
+        "meet": "認識一下 @{{username}}",
+        "why": "你們為什麼合拍",
+        "opener": "開場白",
+        "accept": "打聲招呼",
+        "pass": "略過",
+        "block": "封鎖",
+        "openChat": "打開聊天",
+        "waiting": "你已答應，正在等待對方…",
+        "youPassed": "你略過了這次配對。",
+        "theyPassed": "這次對方略過了。下週會有新的配對。",
+        "intro": "Ryo 每週為你介紹一位值得認識的人——朋友或合作夥伴。",
+        "start": "開始",
+        "inPool": "你已加入。下一次配對將在本週送達。",
+        "paused": "配對已暫停。可在「個人檔案」標籤頁中恢復。"
+      },
+      "profile": {
+        "hint": "這是你的配對對象會看到的內容。在你核准之前不會分享任何內容。",
+        "placeholder": "你在做什麼、喜歡什麼、想認識什麼樣的人…",
+        "approve": "核准",
+        "approved": "已核准 ✓",
+        "pause": "暫停",
+        "resume": "恢復",
+        "leave": "退出 Matchmaker"
+      },
+      "interview": {
+        "intro": "Ryo 會問你幾個問題並起草你的個人檔案。分享之前你都可以先檢閱。",
+        "begin": "開始",
+        "kickoff": "嗨 ryo，幫我設定一下配對檔案",
+        "placeholder": "回覆 Ryo…",
+        "send": "傳送",
+        "draftSaved": "✎ 草稿已更新——請查看「個人檔案」標籤頁"
+      },
+      "help": {
+        "interview": {
+          "title": "訪談",
+          "description": "和 Ryo 聊聊你在做什麼、想認識什麼樣的人"
+        },
+        "approve": {
+          "title": "核准個人檔案",
+          "description": "Ryo 起草一份簡短檔案；在你編輯並核准之前不會分享"
+        },
+        "weeklyMatch": {
+          "title": "每週配對",
+          "description": "Ryo 每週為你介紹一個人，並說明你們為什麼應該認識"
+        },
+        "doubleOptIn": {
+          "title": "雙向確認",
+          "description": "如果你們都答應，Ryo 會開啟一個附開場白的私人聊天"
+        },
+        "pauseLeave": {
+          "title": "暫停或退出",
+          "description": "隨時暫停配對，或退出以刪除你的檔案"
+        }
+      }
     }
   },
   "common": {
