@@ -267,9 +267,12 @@ export async function extractTags(profile: string): Promise<string[]> {
 
 const judgeSchema = z.object({
   score: z.number().int().min(0).max(100),
-  why: z.string().max(300),
-  openerFromA: z.string().max(200),
-  openerFromB: z.string().max(200),
+  // Length guidance lives in the prompt; these caps are only a safety net.
+  // OpenAI structured outputs enforce maxLength during decoding, so a tight
+  // cap truncates mid-word instead of producing a shorter sentence.
+  why: z.string().max(800),
+  openerFromA: z.string().max(500),
+  openerFromB: z.string().max(500),
 });
 
 // ponytail: single judge call per pair. Upgrade path (Ditto-style): simulate a
