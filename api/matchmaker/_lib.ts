@@ -11,8 +11,7 @@
  */
 
 import { generateText, Output } from "ai";
-import { google } from "@ai-sdk/google";
-import { getModelInstance } from "../_utils/_aiModels.js";
+import { openai } from "@ai-sdk/openai";
 import { z } from "zod";
 import type { Redis } from "../_utils/redis.js";
 import { redisKeys } from "../../src/shared/redisKeys.js";
@@ -40,12 +39,9 @@ export const MIN_MATCH_SCORE = 60;
 const DROP_COOLDOWN_MS = 6 * 24 * 60 * 60 * 1000;
 const DROP_TTL_SECONDS = 14 * 24 * 60 * 60;
 const JUDGE_CONCURRENCY = 8;
-// Cheap model for tagging + judging. Gemini Flash when configured (like the
-// rest of ryOS's background AI), otherwise OpenAI so one key is enough.
-const matchModel = () =>
-  process.env.GOOGLE_GENERATIVE_AI_API_KEY
-    ? google("gemini-3-flash-preview")
-    : getModelInstance("gpt-5.5");
+/** One small OpenAI model for the whole Matchmaker (interview, tags, judge). */
+export const MATCHMAKER_MODEL_ID = "gpt-6-luna";
+const matchModel = () => openai(MATCHMAKER_MODEL_ID);
 
 export type MatchStatus = "none" | "active" | "paused";
 export type MatchResponse = "pending" | "accepted" | "declined";
@@ -262,7 +258,7 @@ export async function extractTags(profile: string): Promise<string[]> {
       }),
     }),
     prompt: `Extract matching tags from this profile:\n\n${profile}`,
-    temperature: 0,
+    reasoning: "low",
   });
   return [...new Set(output.tags.map((t) => t.trim().toLowerCase()))];
 }
@@ -284,7 +280,7 @@ export async function judgePair(
     output: Output.object({ schema: judgeSchema }),
     instructions: MATCHMAKER_JUDGE_INSTRUCTIONS,
     prompt: `PERSON A:\n${a.profile}\n\nPERSON B:\n${b.profile}`,
-    temperature: 0.3,
+    reasoning: "low",
   });
   return { a: a.username, b: b.username, ...output };
 }

@@ -17,7 +17,7 @@ import {
 import { z } from "zod";
 import { apiHandler } from "../_utils/api-handler.js";
 import * as RateLimit from "../_utils/_rate-limit.js";
-import { DEFAULT_MODEL, getModelInstance } from "../_utils/_aiModels.js";
+import { openai } from "@ai-sdk/openai";
 import { MATCHMAKER_INTAKE_INSTRUCTIONS } from "../_utils/_aiPrompts.js";
 import { getMemoryIndex } from "../_utils/_memory.js";
 import {
@@ -27,7 +27,12 @@ import {
 import { upsertSpeechDraft } from "../_utils/speech-permit-store.js";
 import { resolveSpeechOwner } from "../_utils/speech-permit.js";
 import { getAssistantVisibleText } from "../../src/apps/chats/utils/aiMessageText.js";
-import { getProfile, MAX_PROFILE_CHARS, saveDraft } from "./_lib.js";
+import {
+  getProfile,
+  MATCHMAKER_MODEL_ID,
+  MAX_PROFILE_CHARS,
+  saveDraft,
+} from "./_lib.js";
 
 const MAX_HISTORY = 30;
 
@@ -99,17 +104,19 @@ export default apiHandler(
         `APPROVED PROFILE:\n${profile.approved ?? "(none)"}`,
     };
 
-    const modelId = DEFAULT_MODEL;
+    // Luna is a GPT-6 tier: reuse gpt-6's agent settings (low reasoning,
+    // no custom temperature) while running the smaller model.
+    const modelId = "gpt-6";
     const agent = createRyoToolLoopAgent({
       preset: "matchmakerIntake",
       prepared: {
-        selectedModel: getModelInstance(modelId),
+        selectedModel: openai(MATCHMAKER_MODEL_ID),
         modelId,
         tools,
         instructions: { role: "system", content: MATCHMAKER_INTAKE_INSTRUCTIONS },
         dynamicContextMessages: [context],
         toolsContext: {},
-        runtimeContext: { username, channel: "matchmaker", modelId },
+        runtimeContext: { username, channel: "matchmaker", modelId: MATCHMAKER_MODEL_ID },
       },
     });
 
