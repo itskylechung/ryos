@@ -24,6 +24,9 @@ import {
   createRyoToolLoopAgent,
   RYO_AGENT_TIMEOUTS,
 } from "../_utils/ryo-agent.js";
+import { upsertSpeechDraft } from "../_utils/speech-permit-store.js";
+import { resolveSpeechOwner } from "../_utils/speech-permit.js";
+import { getAssistantVisibleText } from "../../src/apps/chats/utils/aiMessageText.js";
 import { getProfile, MAX_PROFILE_CHARS, saveDraft } from "./_lib.js";
 
 const MAX_HISTORY = 30;
@@ -123,6 +126,18 @@ export default apiHandler(
       result.pipeUIMessageStreamToResponse(res, {
         status: 200,
         originalMessages: uiMessages,
+        generateMessageId: () => crypto.randomUUID(),
+        // Lets the reused Chats speak button get a speech permit for Ryo's reply.
+        onEnd: async ({ responseMessage }) => {
+          const text = getAssistantVisibleText(responseMessage);
+          if (!text) return;
+          await upsertSpeechDraft({
+            redis,
+            owner: resolveSpeechOwner({ username, ip: "" }),
+            messageId: responseMessage.id,
+            text,
+          }).catch((error) => logger.error("Matchmaker speech draft failed", error));
+        },
       });
     } catch (error) {
       logger.error("Matchmaker chat failed", error);

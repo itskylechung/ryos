@@ -4943,8 +4943,7 @@
       },
       "tabs": {
         "week": "本週",
-        "profile": "個人檔案",
-        "interview": "訪談"
+        "profile": "個人檔案"
       },
       "week": {
         "meet": "認識一下 @{{username}}",
@@ -4975,9 +4974,8 @@
         "intro": "Ryo 會問你幾個問題並起草你的個人檔案。分享之前你都可以先檢閱。",
         "begin": "開始",
         "kickoff": "嗨 ryo，幫我設定一下配對檔案",
-        "placeholder": "回覆 Ryo…",
-        "send": "傳送",
-        "draftSaved": "✎ 草稿已更新——請查看「個人檔案」標籤頁"
+        "draftSaved": "檔案草稿已更新——請查看「個人檔案」",
+        "savingDraft": "正在更新你的檔案…"
       },
       "help": {
         "interview": {
@@ -5000,6 +4998,10 @@
           "title": "暫停或退出",
           "description": "隨時暫停配對，或退出以刪除你的檔案"
         }
+      },
+      "sidebar": {
+        "ryo": "Ryo",
+        "matches": "配對"
       }
     }
   },

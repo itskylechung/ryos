@@ -1,22 +1,28 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useChat } from "@ai-sdk/react";
+import { useChat, type UIMessage } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import { AppProps } from "@/apps/base/types";
 import { AppWindowShell } from "@/components/shared/AppWindowShell";
 import { AppHelpAboutDialogs } from "@/components/shared/AppHelpAboutDialogs";
-import { ThemedTabsList, ThemedTabsTrigger } from "@/components/shared/ThemedTabs";
-import { Tabs, TabsContent } from "@/components/ui/tabs";
+import { osAppSidebarSurfaceClassName } from "@/components/shared/osThemePrimitives";
 import { Button } from "@/components/ui/button";
 import { OsTextarea } from "@/components/ui/os-textarea";
-import { Input } from "@/components/ui/input";
 import { EmptyState } from "@/components/ui/empty-state";
+// Reuse Chats' message list + input so the interview looks and behaves like
+// talking to Ryo in Chats (bubbles, tool status rows, speech, theming).
+import { ChatMessages } from "@/apps/chats/components/ChatMessages";
+import { ChatInput } from "@/apps/chats/components/ChatInput";
+import type { ChatMessage } from "@/apps/chats/components/chat-messages/types";
+import { useChatSpeechSync } from "@/apps/chats/hooks/useChatSpeechSync";
+import type { AIChatMessage } from "@/types/chat";
 import { useThemeFlags } from "@/hooks/useThemeFlags";
 import { useTranslatedHelpItems } from "@/hooks/useTranslatedHelpItems";
 import { useChatsStore } from "@/stores/useChatsStore";
 import { getApiUrl } from "@/utils/platform";
 import { getTranslatedAppName } from "@/utils/i18n";
 import { openChatRoomFromNotification } from "@/utils/openChatRoomFromNotification";
+import { cn } from "@/lib/utils";
 import {
   getMatchDrop,
   getMatchProfile,
@@ -29,7 +35,7 @@ import {
 import { appMetadata, helpItems } from "..";
 import { MatchmakerMenuBar } from "./MatchmakerMenuBar";
 
-type Tab = "week" | "profile" | "interview";
+type Pane = "ryo" | "week" | "profile";
 
 export function MatchmakerAppComponent({
   isWindowOpen,
@@ -41,15 +47,20 @@ export function MatchmakerAppComponent({
   onNavigatePrevious,
 }: AppProps) {
   const { t } = useTranslation();
-  const { isWindowsTheme } = useThemeFlags();
+  const { isWindowsTheme, isMacOSTheme, isAquaGlass } = useThemeFlags();
   const translatedHelpItems = useTranslatedHelpItems("matchmaker", helpItems);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isAboutOpen, setIsAboutOpen] = useState(false);
 
   const isAuthenticated = useChatsStore((s) => s.isAuthenticated);
-  const [tab, setTab] = useState<Tab>("week");
+  const username = useChatsStore((s) => s.username);
+  const rooms = useChatsStore((s) => s.rooms);
+  const fontSize = useChatsStore((s) => s.fontSize);
+
+  const [pane, setPane] = useState<Pane>("week");
   const [profile, setProfile] = useState<MatchProfile | null>(null);
   const [drop, setDrop] = useState<MatchDrop | null>(null);
+  const [past, setPast] = useState<string[]>([]);
   const [draftText, setDraftText] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -61,6 +72,7 @@ export function MatchmakerAppComponent({
       setProfile(p.profile);
       setDraftText(p.profile.draft ?? p.profile.approved ?? "");
       setDrop(d.drop);
+      setPast(d.past);
       setError(null);
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
@@ -83,6 +95,19 @@ export function MatchmakerAppComponent({
     }
   };
 
+  // Past matches = private 1:1 rooms with someone Ryo matched you with.
+  const matchRooms = useMemo(() => {
+    const me = username?.toLowerCase();
+    const partners = new Set(past);
+    return (rooms ?? []).filter(
+      (room) =>
+        room.type === "private" &&
+        room.members?.length === 2 &&
+        room.members.some((m) => m !== me && partners.has(m))
+    );
+  }, [rooms, past, username]);
+
+  // ---- Interview (Ryo) --------------------------------------------------
   const transport = useMemo(
     () =>
       new DefaultChatTransport({
@@ -91,17 +116,35 @@ export function MatchmakerAppComponent({
       }),
     []
   );
-  const { messages, sendMessage, status } = useChat({
-    transport,
-    // The agent saves drafts via a tool — pull the latest into the Profile tab.
-    onFinish: () => void refresh(),
-  });
-  const [input, setInput] = useState("");
+  const { messages, sendMessage, status, stop, error: chatError, regenerate } =
+    useChat({
+      transport,
+      // The agent saves drafts via a tool — pull the latest into Profile.
+      onFinish: () => void refresh(),
+    });
   const chatBusy = status === "submitted" || status === "streaming";
-  const send = (text: string) => {
-    if (!text.trim() || chatBusy) return;
-    void sendMessage({ text });
-    setInput("");
+  const [scrollToBottomTrigger, setScrollToBottomTrigger] = useState(0);
+  const { highlightSegment, isSpeaking, speakAssistantMessageManually, stopSpeech } =
+    useChatSpeechSync({
+      aiMessages: messages as unknown as AIChatMessage[],
+      currentMessages: messages as UIMessage[],
+      isLoading: chatBusy,
+      speechEnabled: false, // manual speak button only
+    });
+
+  const send = (text: string, imageData: string | null = null) => {
+    if ((!text.trim() && !imageData) || chatBusy) return false;
+    const mediaType = imageData?.match(/^data:([^;]+);/)?.[1];
+    void sendMessage({
+      text,
+      // ponytail: images go inline as data URLs; switch to the Chats upload
+      // flow if interview images become common.
+      ...(imageData && mediaType
+        ? { files: [{ type: "file" as const, mediaType, url: imageData }] }
+        : {}),
+    });
+    setScrollToBottomTrigger((n) => n + 1);
+    return true;
   };
 
   const menuBar = (
@@ -113,11 +156,57 @@ export function MatchmakerAppComponent({
     />
   );
 
+  // ---- Panes -------------------------------------------------------------
+  const renderRyo = () =>
+    messages.length === 0 ? (
+      <div className="flex h-full flex-col items-center justify-center gap-2 p-6 text-center">
+        <p>{t("apps.matchmaker.interview.intro")}</p>
+        <Button variant="default" onClick={() => send(t("apps.matchmaker.interview.kickoff"))}>
+          {t("apps.matchmaker.interview.begin")}
+        </Button>
+      </div>
+    ) : (
+      <div className="relative h-full">
+        <div className="absolute inset-0 flex flex-col">
+          <div className="flex-1 overflow-hidden">
+            <ChatMessages
+              messages={messages as unknown as ChatMessage[]}
+              isLoading={chatBusy}
+              error={chatError}
+              onRetry={() => void regenerate()}
+              isRoomView={false}
+              username={username ?? undefined}
+              fontSize={fontSize}
+              scrollToBottomTrigger={scrollToBottomTrigger}
+              highlightSegment={highlightSegment}
+              isSpeaking={isSpeaking}
+              speakAssistantMessageManually={speakAssistantMessageManually}
+              stopSpeech={stopSpeech}
+            />
+          </div>
+        </div>
+        <div className="absolute bottom-0 left-0 z-10 w-full p-2">
+          <ChatInput
+            isLoading={chatBusy}
+            isForeground={isForeground}
+            onSubmitMessage={(text, imageData) => send(text, imageData)}
+            onStop={() => void stop()}
+            isSpeechPlaying={isSpeaking}
+          />
+        </div>
+      </div>
+    );
+
   const renderWeek = () => {
     if (drop) {
       const matched = drop.roomId !== null;
+      const respond = (action: "accept" | "decline" | "block") =>
+        run(async () => {
+          setDrop((await respondToMatchDrop(action)).drop);
+          if (action === "accept") void refresh();
+        });
       return (
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 p-3">
           <div className="font-bold">
             {t("apps.matchmaker.week.meet", { username: drop.partner })}
           </div>
@@ -131,18 +220,18 @@ export function MatchmakerAppComponent({
             <p className="italic">“{drop.opener}”</p>
           </div>
           {matched ? (
-            <Button onClick={() => openChatRoomFromNotification(drop.roomId)}>
+            <Button variant="default" onClick={() => openChatRoomFromNotification(drop.roomId)}>
               {t("apps.matchmaker.week.openChat")}
             </Button>
           ) : drop.myResponse === "pending" ? (
             <div className="flex gap-1.5">
-              <Button disabled={busy} onClick={() => run(async () => setDrop((await respondToMatchDrop("accept")).drop))}>
+              <Button variant="default" disabled={busy} onClick={() => respond("accept")}>
                 {t("apps.matchmaker.week.accept")}
               </Button>
-              <Button variant="secondary" disabled={busy} onClick={() => run(async () => setDrop((await respondToMatchDrop("decline")).drop))}>
+              <Button variant="secondary" disabled={busy} onClick={() => respond("decline")}>
                 {t("apps.matchmaker.week.pass")}
               </Button>
-              <Button variant="destructive" disabled={busy} onClick={() => run(async () => setDrop((await respondToMatchDrop("block")).drop))}>
+              <Button variant="destructive" disabled={busy} onClick={() => respond("block")}>
                 {t("apps.matchmaker.week.block")}
               </Button>
             </div>
@@ -160,9 +249,9 @@ export function MatchmakerAppComponent({
     }
     if (!profile || profile.status === "none") {
       return (
-        <div className="flex flex-col items-center gap-2 py-6 text-center">
+        <div className="flex flex-col items-center gap-2 p-6 text-center">
           <p>{t("apps.matchmaker.week.intro")}</p>
-          <Button onClick={() => setTab("interview")}>
+          <Button variant="default" onClick={() => setPane("ryo")}>
             {t("apps.matchmaker.week.start")}
           </Button>
         </div>
@@ -180,7 +269,7 @@ export function MatchmakerAppComponent({
   };
 
   const renderProfile = () => (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 p-3">
       <p className="text-neutral-500">{t("apps.matchmaker.profile.hint")}</p>
       <OsTextarea
         value={draftText}
@@ -194,6 +283,7 @@ export function MatchmakerAppComponent({
       )}
       <div className="flex flex-wrap gap-1.5">
         <Button
+          variant="default"
           disabled={busy || draftText.trim().length < 20}
           onClick={() => run(async () => setProfile((await updateMatchProfile({ action: "approve", text: draftText })).profile))}
         >
@@ -229,52 +319,44 @@ export function MatchmakerAppComponent({
     </div>
   );
 
-  const renderInterview = () => (
-    <div className="flex h-full min-h-0 flex-col gap-2">
-      <div className="flex-1 min-h-0 overflow-y-auto flex flex-col gap-2">
-        {messages.length === 0 && (
-          <div className="flex flex-col items-center gap-2 py-6 text-center">
-            <p>{t("apps.matchmaker.interview.intro")}</p>
-            <Button onClick={() => send(t("apps.matchmaker.interview.kickoff"))}>
-              {t("apps.matchmaker.interview.begin")}
-            </Button>
-          </div>
-        )}
-        {messages.map((m) => (
-          <div key={m.id} className={m.role === "user" ? "self-end text-right" : "self-start"}>
-            {m.parts.map((part, i) =>
-              part.type === "text" ? (
-                <p key={i} className="whitespace-pre-wrap">
-                  {m.role === "assistant" && <b>ryo: </b>}
-                  {part.text}
-                </p>
-              ) : part.type === "tool-saveMatchProfileDraft" ? (
-                <p key={i} className="text-neutral-500 italic">
-                  {t("apps.matchmaker.interview.draftSaved")}
-                </p>
-              ) : null
-            )}
-          </div>
-        ))}
-        {chatBusy && <p className="text-neutral-500">…</p>}
+  // ---- Sidebar (mirrors Chats' room sidebar) -------------------------------
+  const sidebarItem = (id: Pane, label: string) => (
+    <div
+      key={id}
+      className={cn("os-app-sidebar-item py-1 px-5", pane !== id && "hover:bg-black/5")}
+      data-selected={pane === id ? "true" : undefined}
+      onClick={() => setPane(id)}
+    >
+      {label}
+    </div>
+  );
+
+  const sidebar = (
+    <div className={osAppSidebarSurfaceClassName({ isMacOSTheme, isWindowsTheme, isAquaGlass }, { layout: "side" })}>
+      <div className="pt-3 flex flex-col flex-1 overflow-hidden">
+        <div className="os-app-sidebar-header mb-2 px-3">
+          <h2 className="text-[14px] pl-1">{getTranslatedAppName("matchmaker")}</h2>
+        </div>
+        <div className="os-app-sidebar-list space-y-1 w-full flex-1 overflow-y-auto min-h-0">
+          {sidebarItem("ryo", t("apps.matchmaker.sidebar.ryo"))}
+          {sidebarItem("week", t("apps.matchmaker.tabs.week"))}
+          {sidebarItem("profile", t("apps.matchmaker.tabs.profile"))}
+          {matchRooms.length > 0 && (
+            <div className="os-app-sidebar-section mt-2 px-4 pt-2 pb-1 w-full !text-[11px] uppercase tracking-wide text-black/50">
+              {t("apps.matchmaker.sidebar.matches")}
+            </div>
+          )}
+          {matchRooms.map((room) => (
+            <div
+              key={room.id}
+              className="os-app-sidebar-item py-1 px-5 hover:bg-black/5"
+              onClick={() => openChatRoomFromNotification(room.id)}
+            >
+              @{room.members?.find((m) => m !== username?.toLowerCase())}
+            </div>
+          ))}
+        </div>
       </div>
-      <form
-        className="flex gap-1.5"
-        onSubmit={(e) => {
-          e.preventDefault();
-          send(input);
-        }}
-      >
-        <Input
-          className="flex-1"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder={t("apps.matchmaker.interview.placeholder")}
-        />
-        <Button type="submit" disabled={chatBusy || !input.trim()}>
-          {t("apps.matchmaker.interview.send")}
-        </Button>
-      </form>
     </div>
   );
 
@@ -306,31 +388,22 @@ export function MatchmakerAppComponent({
         onNavigatePrevious,
       }}
     >
-      <div className="flex h-full min-h-0 flex-col bg-white p-3 text-[12px] font-geneva-12">
+      <div
+        className={cn(
+          "flex size-full text-[12px] font-geneva-12",
+          isWindowsTheme && "border-t border-[#919b9c]"
+        )}
+      >
         {!isAuthenticated ? (
           <EmptyState message={t("apps.matchmaker.signIn")} className="flex-1" />
         ) : (
-          <Tabs
-            value={tab}
-            onValueChange={(v) => setTab(v as Tab)}
-            className="flex h-full min-h-0 flex-col"
-          >
-            <ThemedTabsList className="grid w-full grid-cols-3">
-              <ThemedTabsTrigger value="week">{t("apps.matchmaker.tabs.week")}</ThemedTabsTrigger>
-              <ThemedTabsTrigger value="profile">{t("apps.matchmaker.tabs.profile")}</ThemedTabsTrigger>
-              <ThemedTabsTrigger value="interview">{t("apps.matchmaker.tabs.interview")}</ThemedTabsTrigger>
-            </ThemedTabsList>
-            {error && <p className="mt-2 text-red-600">{error}</p>}
-            <TabsContent value="week" className="mt-2 flex-1 min-h-0 overflow-y-auto">
-              {renderWeek()}
-            </TabsContent>
-            <TabsContent value="profile" className="mt-2 flex-1 min-h-0 overflow-y-auto">
-              {renderProfile()}
-            </TabsContent>
-            <TabsContent value="interview" className="mt-2 flex-1 min-h-0">
-              {renderInterview()}
-            </TabsContent>
-          </Tabs>
+          <>
+            <div className="h-full">{sidebar}</div>
+            <div className={cn("relative flex-1 min-w-0 h-full overflow-y-auto", !isAquaGlass && "bg-white/85")}>
+              {error && <p className="px-3 pt-2 text-red-600">{error}</p>}
+              {pane === "ryo" ? renderRyo() : pane === "week" ? renderWeek() : renderProfile()}
+            </div>
+          </>
         )}
       </div>
     </AppWindowShell>

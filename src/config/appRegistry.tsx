@@ -646,8 +646,8 @@ export const appRegistry = {
     helpItems: matchmakerHelpItems,
     metadata: matchmakerMetadata,
     windowConfig: {
-      defaultSize: { width: 420, height: 520 },
-      minSize: { width: 340, height: 400 },
+      defaultSize: { width: 640, height: 520 },
+      minSize: { width: 480, height: 400 },
     } as WindowConstraints,
   },
 } as const;

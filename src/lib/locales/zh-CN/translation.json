@@ -4943,8 +4943,7 @@
       },
       "tabs": {
         "week": "本周",
-        "profile": "个人资料",
-        "interview": "访谈"
+        "profile": "个人资料"
       },
       "week": {
         "meet": "认识一下 @{{username}}",
@@ -4975,9 +4974,8 @@
         "intro": "Ryo 会问你几个问题并起草你的个人资料。分享之前你都可以先审阅。",
         "begin": "开始",
         "kickoff": "嗨 ryo，帮我设置一下匹配资料",
-        "placeholder": "回复 Ryo…",
-        "send": "发送",
-        "draftSaved": "✎ 草稿已更新——请查看“个人资料”标签页"
+        "draftSaved": "资料草稿已更新——请查看“个人资料”",
+        "savingDraft": "正在更新你的资料…"
       },
       "help": {
         "interview": {
@@ -5000,6 +4998,10 @@
           "title": "暂停或退出",
           "description": "随时暂停匹配，或退出以删除你的资料"
         }
+      },
+      "sidebar": {
+        "ryo": "Ryo",
+        "matches": "匹配"
       }
     }
   },

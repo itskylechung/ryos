@@ -42,7 +42,9 @@ export const leaveMatchmaker = () =>
   });
 
 export const getMatchDrop = () =>
-  apiRequest<{ drop: MatchDrop | null }>({ path: "/api/matchmaker/drop" });
+  apiRequest<{ drop: MatchDrop | null; past: string[] }>({
+    path: "/api/matchmaker/drop",
+  });
 
 export const respondToMatchDrop = (action: "accept" | "decline" | "block") =>
   apiRequest<{ drop: MatchDrop }>({

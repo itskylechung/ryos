@@ -4943,8 +4943,7 @@
       },
       "tabs": {
         "week": "이번 주",
-        "profile": "프로필",
-        "interview": "인터뷰"
+        "profile": "프로필"
       },
       "week": {
         "meet": "@{{username}} 님을 만나 보세요",
@@ -4975,9 +4974,8 @@
         "intro": "Ryo가 몇 가지 질문을 하고 프로필 초안을 작성해요. 공유되기 전에 검토할 수 있어요.",
         "begin": "시작",
         "kickoff": "안녕 ryo, 매치 프로필 만드는 것 좀 도와줘",
-        "placeholder": "Ryo에게 답장…",
-        "send": "보내기",
-        "draftSaved": "✎ 초안이 업데이트되었어요 — 프로필 탭을 확인하세요"
+        "draftSaved": "프로필 초안이 업데이트되었어요 — 프로필을 확인하세요",
+        "savingDraft": "프로필 업데이트 중…"
       },
       "help": {
         "interview": {
@@ -5000,6 +4998,10 @@
           "title": "일시 정지 또는 나가기",
           "description": "언제든 매치를 일시 정지하거나, 나가서 프로필을 삭제할 수 있어요"
         }
+      },
+      "sidebar": {
+        "ryo": "Ryo",
+        "matches": "매치"
       }
     }
   },

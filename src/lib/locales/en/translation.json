@@ -5343,8 +5343,7 @@
       },
       "tabs": {
         "week": "This Week",
-        "profile": "Profile",
-        "interview": "Interview"
+        "profile": "Profile"
       },
       "week": {
         "meet": "Meet @{{username}}",
@@ -5375,9 +5374,8 @@
         "intro": "Ryo will ask a few questions and draft your profile. You'll review it before anything is shared.",
         "begin": "Begin",
         "kickoff": "hi ryo, help me set up my match profile",
-        "placeholder": "Reply to Ryo…",
-        "send": "Send",
-        "draftSaved": "✎ draft updated — check the Profile tab"
+        "draftSaved": "Profile draft updated — check Profile",
+        "savingDraft": "Updating your profile…"
       },
       "help": {
         "interview": {
@@ -5400,6 +5398,10 @@
           "title": "Pause or Leave",
           "description": "Pause matches anytime, or leave to delete your profile"
         }
+      },
+      "sidebar": {
+        "ryo": "Ryo",
+        "matches": "Matches"
       }
     }
   },

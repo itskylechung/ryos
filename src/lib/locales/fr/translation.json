@@ -4947,8 +4947,7 @@
       },
       "tabs": {
         "week": "Cette semaine",
-        "profile": "Profil",
-        "interview": "Entretien"
+        "profile": "Profil"
       },
       "week": {
         "meet": "Rencontrez @{{username}}",
@@ -4979,9 +4978,8 @@
         "intro": "Ryo vous pose quelques questions et rédige votre profil. Vous le relirez avant tout partage.",
         "begin": "Commencer",
         "kickoff": "salut ryo, aide-moi à créer mon profil de match",
-        "placeholder": "Répondre à Ryo…",
-        "send": "Envoyer",
-        "draftSaved": "✎ brouillon mis à jour – consultez l’onglet Profil"
+        "draftSaved": "Brouillon du profil mis à jour – consultez Profil",
+        "savingDraft": "Mise à jour de votre profil…"
       },
       "help": {
         "interview": {
@@ -5004,6 +5002,10 @@
           "title": "Pause ou départ",
           "description": "Mettez les matchs en pause à tout moment, ou quittez pour supprimer votre profil"
         }
+      },
+      "sidebar": {
+        "ryo": "Ryo",
+        "matches": "Matchs"
       }
     }
   },
