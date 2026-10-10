@@ -10,11 +10,11 @@
  */
 
 import { generateText, Output } from "ai";
-import { google } from "@ai-sdk/google";
 import type { Redis } from "../_utils/redis.js";
 import { z } from "zod";
 import { apiHandler } from "../_utils/api-handler.js";
 import { consolidateMemoryContent } from "./_memory-consolidation.js";
+import { getStoredUserRecord } from "../_utils/auth/_user-record.js";
 import {
   getMemoryIndex,
   getMemoryDetail,
@@ -29,6 +29,7 @@ import {
   isMemoryAccountActive,
   withMemoryAccountMutation,
 } from "../_utils/_memory.js";
+import { getBackgroundModelSettings } from "../_utils/_aiModels.js";
 
 const extractionSchema = z.object({
   dailyNotes: z
@@ -350,7 +351,7 @@ export async function extractMemoriesFromConversation({
   });
 
   const { output: result } = await generateText({
-    model: google("gemini-3-flash-preview"),
+    ...getBackgroundModelSettings(0.3),
     output: Output.object({
       schema: extractionSchema,
     }),
@@ -358,7 +359,6 @@ export async function extractMemoriesFromConversation({
     prompt:
       `${existingStateSection}\n\n--- CONVERSATION ---\n${conversationText}\n--- END CONVERSATION ---\n\n` +
       `Extract up to 8 daily notes and up to ${maxLongTerm} long-term memories. Return empty arrays if nothing qualifies.`,
-    temperature: 0.3,
   });
   if (!(await accountIsActive())) return accountDeleted();
 

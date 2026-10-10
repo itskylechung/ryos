@@ -4934,6 +4934,79 @@
         "unknownArtist": "Artista sconosciuto"
       },
       "title": "Winamp"
+    },
+    "matchmaker": {
+      "name": "Matchmaker",
+      "title": "Matchmaker",
+      "description": "Presentazioni settimanali a persone che dovresti conoscere",
+      "signIn": "Accedi per usare Matchmaker",
+      "menu": {
+        "help": "Aiuto Matchmaker",
+        "about": "Informazioni su Matchmaker",
+        "refresh": "Aggiorna"
+      },
+      "tabs": {
+        "week": "Questa settimana",
+        "profile": "Profilo"
+      },
+      "week": {
+        "meet": "Conosci @{{username}}",
+        "why": "Perché voi due",
+        "opener": "Rompighiaccio",
+        "accept": "Saluta",
+        "pass": "Salta",
+        "block": "Blocca",
+        "openChat": "Apri chat",
+        "waiting": "Hai detto di sì. In attesa dell’altra persona…",
+        "youPassed": "Hai saltato questo match.",
+        "theyPassed": "L’altra persona ha passato questa volta. Nuovo match la prossima settimana.",
+        "intro": "Una volta a settimana Ryo ti presenta una persona che dovresti conoscere: un amico o un collaboratore.",
+        "start": "Inizia",
+        "inPool": "Sei dentro. Il tuo prossimo match arriva questa settimana.",
+        "paused": "I match sono in pausa. Riprendi dalla scheda Profilo."
+      },
+      "profile": {
+        "hint": "Questo è ciò che vede il tuo match. Nulla viene condiviso finché non approvi.",
+        "placeholder": "Cosa stai costruendo, cosa ti appassiona, chi vorresti conoscere…",
+        "approve": "Approva",
+        "approved": "Approvato ✓",
+        "pause": "Pausa",
+        "resume": "Riprendi",
+        "leave": "Esci da Matchmaker"
+      },
+      "interview": {
+        "intro": "Ryo ti farà qualche domanda e scriverà una bozza del tuo profilo. Lo rivedrai prima che venga condiviso.",
+        "begin": "Inizia",
+        "kickoff": "ciao ryo, aiutami a creare il mio profilo match",
+        "draftSaved": "Bozza del profilo aggiornata: controlla Profilo",
+        "savingDraft": "Aggiornamento del profilo…"
+      },
+      "help": {
+        "interview": {
+          "title": "Intervista",
+          "description": "Racconta a Ryo cosa stai costruendo e chi vorresti conoscere"
+        },
+        "approve": {
+          "title": "Approva il profilo",
+          "description": "Ryo scrive un breve profilo; nulla viene condiviso finché non lo modifichi e approvi"
+        },
+        "weeklyMatch": {
+          "title": "Match settimanale",
+          "description": "Una volta a settimana Ryo ti presenta una persona e ti spiega perché dovreste conoscervi"
+        },
+        "doubleOptIn": {
+          "title": "Doppio consenso",
+          "description": "Se accettate entrambi, Ryo apre una chat privata con un rompighiaccio"
+        },
+        "pauseLeave": {
+          "title": "Pausa o uscita",
+          "description": "Metti in pausa i match quando vuoi, o esci per eliminare il profilo"
+        }
+      },
+      "sidebar": {
+        "ryo": "Ryo",
+        "matches": "Match"
+      }
     }
   },
   "common": {

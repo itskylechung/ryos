@@ -1,6 +1,6 @@
 import { generateText, Output } from "ai";
-import { google } from "@ai-sdk/google";
 import { z } from "zod";
+import { getBackgroundModelSettings } from "../_utils/_aiModels.js";
 
 /**
  * Shared long-term-memory consolidation, used by both `extract-memories.ts`
@@ -57,13 +57,12 @@ export async function consolidateMemoryContent(
     .join("\n\n");
 
   const { output: consolidated } = await generateText({
-    model: google("gemini-3-flash-preview"),
+    ...getBackgroundModelSettings(0.3),
     output: Output.object({
       schema: memoryConsolidationSchema,
     }),
     instructions: CONSOLIDATION_PROMPT,
     prompt: `NEW:\nSummary: ${newMemory.summary}\nContent: ${newMemory.content}\n\nEXISTING:\n${existingContentText}\n\nMerge into one clean, deduplicated entry.`,
-    temperature: 0.3,
   });
 
   return { summary: consolidated.summary, content: consolidated.content };

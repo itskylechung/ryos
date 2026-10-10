@@ -5330,6 +5330,79 @@
           "description": "Print ryOS ID barcodes for items or tags from Print ▸ Print Item/Tag Labels. Scanning a printed label opens that item or filters by tag."
         }
       }
+    },
+    "matchmaker": {
+      "name": "Matchmaker",
+      "title": "Matchmaker",
+      "description": "Weekly intros to people you should meet",
+      "signIn": "Sign in to use Matchmaker",
+      "menu": {
+        "help": "Matchmaker Help",
+        "about": "About Matchmaker",
+        "refresh": "Refresh"
+      },
+      "tabs": {
+        "week": "This Week",
+        "profile": "Profile"
+      },
+      "week": {
+        "meet": "Meet @{{username}}",
+        "why": "Why you two",
+        "opener": "Icebreaker",
+        "accept": "Say Hi",
+        "pass": "Pass",
+        "block": "Block",
+        "openChat": "Open Chat",
+        "waiting": "You said yes. Waiting for them…",
+        "youPassed": "You passed on this one.",
+        "theyPassed": "They passed this time. New match next week.",
+        "intro": "Once a week, Ryo introduces you to one person you should meet — a friend or collaborator.",
+        "start": "Get Started",
+        "inPool": "You're in the pool. Your next match drops this week.",
+        "paused": "Matches are paused. Resume from the Profile tab."
+      },
+      "profile": {
+        "hint": "This is what your match sees. Nothing is shared until you approve.",
+        "placeholder": "What you're building, what you're into, who you'd like to meet…",
+        "approve": "Approve",
+        "approved": "Approved ✓",
+        "pause": "Pause",
+        "resume": "Resume",
+        "leave": "Leave Matchmaker"
+      },
+      "interview": {
+        "intro": "Ryo will ask a few questions and draft your profile. You'll review it before anything is shared.",
+        "begin": "Begin",
+        "kickoff": "hi ryo, help me set up my match profile",
+        "draftSaved": "Profile draft updated — check Profile",
+        "savingDraft": "Updating your profile…"
+      },
+      "help": {
+        "interview": {
+          "title": "Interview",
+          "description": "Chat with Ryo about what you're building and who you'd like to meet"
+        },
+        "approve": {
+          "title": "Approve Your Profile",
+          "description": "Ryo drafts a short profile; nothing is shared until you edit and approve it"
+        },
+        "weeklyMatch": {
+          "title": "Weekly Match",
+          "description": "Once a week Ryo introduces you to one person, with why you two should meet"
+        },
+        "doubleOptIn": {
+          "title": "Double Opt-In",
+          "description": "If you both accept, Ryo opens a private chat with an icebreaker"
+        },
+        "pauseLeave": {
+          "title": "Pause or Leave",
+          "description": "Pause matches anytime, or leave to delete your profile"
+        }
+      },
+      "sidebar": {
+        "ryo": "Ryo",
+        "matches": "Matches"
+      }
     }
   },
   "components": {

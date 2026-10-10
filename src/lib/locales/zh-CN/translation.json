@@ -4930,6 +4930,79 @@
         "unknownArtist": "未知艺人"
       },
       "title": "Winamp"
+    },
+    "matchmaker": {
+      "name": "Matchmaker",
+      "title": "Matchmaker",
+      "description": "每周为你介绍值得认识的人",
+      "signIn": "登录后即可使用 Matchmaker",
+      "menu": {
+        "help": "Matchmaker 帮助",
+        "about": "关于 Matchmaker",
+        "refresh": "刷新"
+      },
+      "tabs": {
+        "week": "本周",
+        "profile": "个人资料"
+      },
+      "week": {
+        "meet": "认识一下 @{{username}}",
+        "why": "你们为什么合拍",
+        "opener": "开场白",
+        "accept": "打个招呼",
+        "pass": "跳过",
+        "block": "屏蔽",
+        "openChat": "打开聊天",
+        "waiting": "你已同意，正在等待对方…",
+        "youPassed": "你跳过了这次匹配。",
+        "theyPassed": "这次对方跳过了。下周会有新的匹配。",
+        "intro": "Ryo 每周为你介绍一位值得认识的人——朋友或合作伙伴。",
+        "start": "开始",
+        "inPool": "你已加入。下一次匹配将在本周送达。",
+        "paused": "匹配已暂停。可在“个人资料”标签页中恢复。"
+      },
+      "profile": {
+        "hint": "这是你的匹配对象会看到的内容。在你批准之前不会分享任何内容。",
+        "placeholder": "你在做什么、喜欢什么、想认识什么样的人…",
+        "approve": "批准",
+        "approved": "已批准 ✓",
+        "pause": "暂停",
+        "resume": "恢复",
+        "leave": "退出 Matchmaker"
+      },
+      "interview": {
+        "intro": "Ryo 会问你几个问题并起草你的个人资料。分享之前你都可以先审阅。",
+        "begin": "开始",
+        "kickoff": "嗨 ryo，帮我设置一下匹配资料",
+        "draftSaved": "资料草稿已更新——请查看“个人资料”",
+        "savingDraft": "正在更新你的资料…"
+      },
+      "help": {
+        "interview": {
+          "title": "访谈",
+          "description": "和 Ryo 聊聊你在做什么、想认识什么样的人"
+        },
+        "approve": {
+          "title": "批准个人资料",
+          "description": "Ryo 起草一份简短资料；在你编辑并批准之前不会分享"
+        },
+        "weeklyMatch": {
+          "title": "每周匹配",
+          "description": "Ryo 每周为你介绍一个人，并说明你们为什么应该认识"
+        },
+        "doubleOptIn": {
+          "title": "双向确认",
+          "description": "如果你们都同意，Ryo 会开启一个带开场白的私人聊天"
+        },
+        "pauseLeave": {
+          "title": "暂停或退出",
+          "description": "随时暂停匹配，或退出以删除你的资料"
+        }
+      },
+      "sidebar": {
+        "ryo": "Ryo",
+        "matches": "匹配"
+      }
     }
   },
   "common": {

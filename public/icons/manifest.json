@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-08-02T05:48:52.270Z",
+  "generatedAt": "2026-10-07T06:21:27.990Z",
   "themes": {
     "dashboard-widgets": [
       "address-book.png",
@@ -114,6 +114,7 @@
       "macpaint/text.png",
       "mail.png",
       "maps.png",
+      "matchmaker.png",
       "minesweeper-app.png",
       "minesweeper.png",
       "movies.png",

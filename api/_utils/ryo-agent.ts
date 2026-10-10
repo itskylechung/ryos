@@ -7,7 +7,11 @@ import {
   type ToolSet,
   type TimeoutConfiguration,
 } from "ai";
-import { getModelReasoning, modelSupportsTemperature } from "./_aiModels.js";
+import {
+  getModelReasoning,
+  modelSupportsTemperature,
+  type ServerModelId,
+} from "./_aiModels.js";
 import { addCacheControlToMessages } from "./ai-prompt-cache.js";
 import type {
   PreparedRyoConversation,
@@ -110,6 +114,12 @@ export const RYO_AGENT_TIMEOUTS = {
       contactsControlMs: 15_000,
     },
   },
+  matchmakerIntake: {
+    totalMs: 90_000,
+    stepMs: 45_000,
+    chunkMs: 30_000,
+    toolMs: 10_000,
+  },
   telegramHeartbeat: {
     totalMs: 90_000,
     stepMs: 45_000,
@@ -134,6 +144,11 @@ export const RYO_AGENT_PRESETS = {
     stopAfterSteps: 6,
     maxOutputTokens: 4000,
   },
+  matchmakerIntake: {
+    id: "ryo-matchmaker-intake",
+    stopAfterSteps: 4,
+    maxOutputTokens: 2000,
+  },
   telegramHeartbeat: {
     id: "ryo-telegram-heartbeat",
     stopAfterSteps: 6,
@@ -148,13 +163,12 @@ type RyoToolLoopAgentOptions = {
   prepared: Pick<
     PreparedRyoConversation,
     | "selectedModel"
-    | "modelId"
     | "tools"
     | "instructions"
     | "dynamicContextMessages"
     | "toolsContext"
     | "runtimeContext"
-  >;
+  > & { modelId: ServerModelId };
   temperature?: number;
   tools?: ToolSet;
   toolsContext?: PreparedRyoConversation["toolsContext"];

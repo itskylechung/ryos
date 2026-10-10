@@ -18,6 +18,7 @@ import { apiHandler } from "./_utils/api-handler.js";
 import { isAllowedAppHost } from "./_utils/runtime-config.js";
 import { addCacheControlToMessages } from "./_utils/ai-prompt-cache.js";
 import { GOOGLE_FILES_POLL_TIMEOUT_MS } from "./_utils/upload-provider-file.js";
+import { getBackgroundModelSettings } from "./_utils/_aiModels.js";
 
 // ============================================================================
 // Constants and Schemas
@@ -644,9 +645,8 @@ export default apiHandler<z.infer<typeof RequestSchema>>(
       messageCount: prepared.messages.length,
       dynamicContextCount: prepared.dynamicContextMessages.length,
     });
-    const appletModel = google("gemini-3-flash-preview");
     const { text } = await generateText({
-      model: appletModel,
+      ...getBackgroundModelSettings(temperature ?? 0.6),
       instructions: prepared.instructions,
       messages: prepared.messages,
       prepareStep: ({ stepNumber, messages, model: stepModel }) => {
@@ -661,7 +661,6 @@ export default apiHandler<z.infer<typeof RequestSchema>>(
           }),
         };
       },
-      temperature: temperature ?? 0.6,
       maxOutputTokens: 4000,
       timeout: {
         totalMs: 60_000,

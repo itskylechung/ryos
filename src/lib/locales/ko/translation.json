@@ -4930,6 +4930,79 @@
         "unknownArtist": "알 수 없는 아티스트"
       },
       "title": "Winamp"
+    },
+    "matchmaker": {
+      "name": "Matchmaker",
+      "title": "Matchmaker",
+      "description": "만나면 좋을 사람을 매주 소개",
+      "signIn": "Matchmaker를 사용하려면 로그인하세요",
+      "menu": {
+        "help": "Matchmaker 도움말",
+        "about": "Matchmaker에 관하여",
+        "refresh": "새로 고침"
+      },
+      "tabs": {
+        "week": "이번 주",
+        "profile": "프로필"
+      },
+      "week": {
+        "meet": "@{{username}} 님을 만나 보세요",
+        "why": "두 사람이 잘 맞는 이유",
+        "opener": "대화 시작하기",
+        "accept": "인사하기",
+        "pass": "넘기기",
+        "block": "차단",
+        "openChat": "채팅 열기",
+        "waiting": "수락했어요. 상대방을 기다리는 중…",
+        "youPassed": "이번 매치는 넘겼어요.",
+        "theyPassed": "이번에는 상대방이 넘겼어요. 다음 주에 새 매치가 와요.",
+        "intro": "일주일에 한 번, Ryo가 만나면 좋을 한 사람을 소개해 드려요. 친구나 협업 상대로요.",
+        "start": "시작하기",
+        "inPool": "참여 중이에요. 다음 매치는 이번 주에 도착해요.",
+        "paused": "매치가 일시 정지되었어요. 프로필 탭에서 재개하세요."
+      },
+      "profile": {
+        "hint": "매치 상대에게 보이는 내용이에요. 승인하기 전에는 아무것도 공유되지 않아요.",
+        "placeholder": "만들고 있는 것, 빠져 있는 것, 만나고 싶은 사람…",
+        "approve": "승인",
+        "approved": "승인됨 ✓",
+        "pause": "일시 정지",
+        "resume": "재개",
+        "leave": "Matchmaker 나가기"
+      },
+      "interview": {
+        "intro": "Ryo가 몇 가지 질문을 하고 프로필 초안을 작성해요. 공유되기 전에 검토할 수 있어요.",
+        "begin": "시작",
+        "kickoff": "안녕 ryo, 매치 프로필 만드는 것 좀 도와줘",
+        "draftSaved": "프로필 초안이 업데이트되었어요 — 프로필을 확인하세요",
+        "savingDraft": "프로필 업데이트 중…"
+      },
+      "help": {
+        "interview": {
+          "title": "인터뷰",
+          "description": "만들고 있는 것과 만나고 싶은 사람에 대해 Ryo와 이야기하세요"
+        },
+        "approve": {
+          "title": "프로필 승인",
+          "description": "Ryo가 짧은 프로필 초안을 작성해요. 편집하고 승인하기 전에는 공유되지 않아요"
+        },
+        "weeklyMatch": {
+          "title": "주간 매치",
+          "description": "일주일에 한 번 Ryo가 한 사람을 소개하고 두 사람이 만나야 하는 이유를 알려 줘요"
+        },
+        "doubleOptIn": {
+          "title": "양쪽 동의",
+          "description": "둘 다 수락하면 Ryo가 대화 주제와 함께 비공개 채팅을 열어요"
+        },
+        "pauseLeave": {
+          "title": "일시 정지 또는 나가기",
+          "description": "언제든 매치를 일시 정지하거나, 나가서 프로필을 삭제할 수 있어요"
+        }
+      },
+      "sidebar": {
+        "ryo": "Ryo",
+        "matches": "매치"
+      }
     }
   },
   "common": {

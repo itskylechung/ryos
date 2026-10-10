@@ -46,13 +46,24 @@ export type ModelReasoningLevel =
   | "high"
   | "xhigh";
 
+/**
+ * Server-internal models: used by specific features, never user-selectable
+ * (so they stay out of `AI_MODELS` / the model picker).
+ */
+export const INTERNAL_MODEL_IDS = ["gpt-6-luna"] as const;
+export type InternalModelId = (typeof INTERNAL_MODEL_IDS)[number];
+/** Any model id the server may run: user-selectable or internal. */
+export type ServerModelId = SupportedModel | InternalModelId;
+
 const MODEL_REASONING_BY_MODEL: Partial<
-  Record<SupportedModel, ModelReasoningLevel>
+  Record<ServerModelId, ModelReasoningLevel>
 > = {
   // gpt-5.5 defaults to extended reasoning; disable for chat latency/cost.
   "gpt-5.5": "none",
   // GPT-6 Astra does not support `none`; use the lowest documented effort.
   "gpt-6": "low",
+  // GPT-6 Luna (Matchmaker): verified with `low`; same family as Astra.
+  "gpt-6-luna": "low",
 };
 
 // Factory that returns a LanguageModel instance for the requested model
@@ -78,18 +89,48 @@ export const getModelInstance = (model: SupportedModel): LanguageModel => {
 };
 
 /**
+ * Model + call settings for Ryo's background helpers (greeting, memory
+ * extraction/consolidation, daily notes, room replies, applet text, title
+ * parsing, TV channel plans). Gemini 3 Flash by default; set
+ * `RYO_BACKGROUND_PROVIDER=openai` on hosts where Gemini is unavailable (e.g.
+ * its API rejects the server's region) to run them on GPT-6 Luna instead.
+ * Spread into generateText: `generateText({ ...getBackgroundModelSettings(0.3), … })`.
+ */
+export function getBackgroundModelSettings(temperature?: number): {
+  model: LanguageModel;
+  temperature?: number;
+  reasoning?: ModelReasoningLevel;
+  providerOptions?: { openai: { strictJsonSchema: boolean } };
+} {
+  if (process.env.RYO_BACKGROUND_PROVIDER?.trim().toLowerCase() === "openai") {
+    return {
+      model: openai("gpt-6-luna"),
+      // Luna, like Astra, rejects custom temperature.
+      reasoning: getModelReasoning("gpt-6-luna"),
+      // The background schemas have optional fields, which OpenAI's strict
+      // structured outputs reject (every property must be required).
+      providerOptions: { openai: { strictJsonSchema: false } },
+    };
+  }
+  return {
+    model: google("gemini-3-flash-preview"),
+    ...(temperature !== undefined ? { temperature } : {}),
+  };
+}
+
+/**
  * Top-level AI SDK 7 `reasoning` setting for a model, when we override the
  * provider default. Returns undefined to leave the provider default alone.
  */
 export function getModelReasoning(
-  model: SupportedModel
+  model: ServerModelId
 ): ModelReasoningLevel | undefined {
   return MODEL_REASONING_BY_MODEL[model];
 }
 
-/** GPT-6 Astra rejects custom temperature / top_p. */
-export function modelSupportsTemperature(model: SupportedModel): boolean {
-  return model !== "gpt-6";
+/** GPT-6 Astra rejects custom temperature / top_p; treat Luna the same. */
+export function modelSupportsTemperature(model: ServerModelId): boolean {
+  return model !== "gpt-6" && model !== "gpt-6-luna";
 }
 
 export function getTelegramModel(

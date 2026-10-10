@@ -4930,6 +4930,79 @@
         "unknownArtist": "不明なアーティスト"
       },
       "title": "Winamp"
+    },
+    "matchmaker": {
+      "name": "Matchmaker",
+      "title": "Matchmaker",
+      "description": "会うべき人を毎週紹介",
+      "signIn": "Matchmaker を使うにはサインインしてください",
+      "menu": {
+        "help": "Matchmaker ヘルプ",
+        "about": "Matchmaker について",
+        "refresh": "更新"
+      },
+      "tabs": {
+        "week": "今週",
+        "profile": "プロフィール"
+      },
+      "week": {
+        "meet": "@{{username}} さんに会ってみよう",
+        "why": "ふたりが合う理由",
+        "opener": "話のきっかけ",
+        "accept": "あいさつする",
+        "pass": "パス",
+        "block": "ブロック",
+        "openChat": "チャットを開く",
+        "waiting": "OKしました。相手の返事を待っています…",
+        "youPassed": "今回はパスしました。",
+        "theyPassed": "今回は相手がパスしました。来週また新しいマッチがあります。",
+        "intro": "週に一度、Ryo があなたが会うべき人をひとり紹介します。友達やコラボ相手として。",
+        "start": "はじめる",
+        "inPool": "登録済みです。次のマッチは今週届きます。",
+        "paused": "マッチは一時停止中です。プロフィールタブから再開できます。"
+      },
+      "profile": {
+        "hint": "これがマッチ相手に表示されます。承認するまで何も共有されません。",
+        "placeholder": "作っているもの、夢中なこと、会いたい人…",
+        "approve": "承認",
+        "approved": "承認済み ✓",
+        "pause": "一時停止",
+        "resume": "再開",
+        "leave": "Matchmaker をやめる"
+      },
+      "interview": {
+        "intro": "Ryo がいくつか質問して、プロフィールの下書きを作ります。共有前に必ず確認できます。",
+        "begin": "開始",
+        "kickoff": "ryo、マッチ用のプロフィール作りを手伝って",
+        "draftSaved": "プロフィールの下書きを更新しました。プロフィールを確認してください",
+        "savingDraft": "プロフィールを更新中…"
+      },
+      "help": {
+        "interview": {
+          "title": "インタビュー",
+          "description": "作っているものや会いたい人について Ryo と話しましょう"
+        },
+        "approve": {
+          "title": "プロフィールを承認",
+          "description": "Ryo が短いプロフィールを下書きします。編集して承認するまで何も共有されません"
+        },
+        "weeklyMatch": {
+          "title": "毎週のマッチ",
+          "description": "週に一度、Ryo がひとりを紹介し、ふたりが会うべき理由を伝えます"
+        },
+        "doubleOptIn": {
+          "title": "双方の同意",
+          "description": "ふたりとも OK なら、Ryo が話のきっかけ付きのプライベートチャットを開きます"
+        },
+        "pauseLeave": {
+          "title": "一時停止・退会",
+          "description": "マッチはいつでも一時停止でき、退会するとプロフィールが削除されます"
+        }
+      },
+      "sidebar": {
+        "ryo": "Ryo",
+        "matches": "マッチ"
+      }
     }
   },
   "common": {
