@@ -89,6 +89,36 @@ export const getModelInstance = (model: SupportedModel): LanguageModel => {
 };
 
 /**
+ * Model + call settings for Ryo's background helpers (greeting, memory
+ * extraction/consolidation, daily notes, room replies, applet text, title
+ * parsing, TV channel plans). Gemini 3 Flash by default; set
+ * `RYO_BACKGROUND_PROVIDER=openai` on hosts where Gemini is unavailable (e.g.
+ * its API rejects the server's region) to run them on GPT-6 Luna instead.
+ * Spread into generateText: `generateText({ ...getBackgroundModelSettings(0.3), … })`.
+ */
+export function getBackgroundModelSettings(temperature?: number): {
+  model: LanguageModel;
+  temperature?: number;
+  reasoning?: ModelReasoningLevel;
+  providerOptions?: { openai: { strictJsonSchema: boolean } };
+} {
+  if (process.env.RYO_BACKGROUND_PROVIDER?.trim().toLowerCase() === "openai") {
+    return {
+      model: openai("gpt-6-luna"),
+      // Luna, like Astra, rejects custom temperature.
+      reasoning: getModelReasoning("gpt-6-luna"),
+      // The background schemas have optional fields, which OpenAI's strict
+      // structured outputs reject (every property must be required).
+      providerOptions: { openai: { strictJsonSchema: false } },
+    };
+  }
+  return {
+    model: google("gemini-3-flash-preview"),
+    ...(temperature !== undefined ? { temperature } : {}),
+  };
+}
+
+/**
  * Top-level AI SDK 7 `reasoning` setting for a model, when we override the
  * provider default. Returns undefined to leave the provider default alone.
  */
