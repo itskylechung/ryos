@@ -5330,6 +5330,152 @@
           "description": "Print ryOS ID barcodes for items or tags from Print ▸ Print Item/Tag Labels. Scanning a printed label opens that item or filters by tag."
         }
       }
+    },
+    "matchmaker": {
+      "name": "Nee Hao Fine Shyt",
+      "title": "Nee Hao Fine Shyt",
+      "description": "Ryo gets you on real dates",
+      "signIn": "Sign in to use Nee Hao Fine Shyt",
+      "menu": {
+        "help": "Nee Hao Fine Shyt Help",
+        "about": "About Nee Hao Fine Shyt",
+        "refresh": "Refresh"
+      },
+      "tabs": {
+        "week": "This Week",
+        "profile": "Profile"
+      },
+      "week": {
+        "meet": "Meet @{{username}}",
+        "why": "Why you two",
+        "opener": "Icebreaker",
+        "accept": "Say Hi",
+        "pass": "Pass",
+        "block": "Block",
+        "openChat": "Open Chat",
+        "waiting": "You said yes. Waiting for them…",
+        "youPassed": "You passed on this one.",
+        "theyPassed": "They passed this time. New match next week.",
+        "intro": "Ryo gets you on real dates, not endless chatting. Start by setting up your profile with Ryo.",
+        "start": "Get Started",
+        "inPool": "You’re all set. Date plans are coming next: Ryo will set them up for you here.",
+        "paused": "Matches are paused. Resume from the Profile tab."
+      },
+      "profile": {
+        "hint": "This is what your dates see. Nothing is shown until you approve.",
+        "placeholder": "What you’re into, a great first date, the vibe you want…",
+        "approve": "Approve",
+        "approved": "Approved ✓",
+        "pause": "Pause",
+        "resume": "Resume",
+        "leave": "Leave Nee Hao Fine Shyt",
+        "photos": "Photos",
+        "addPhoto": "Add Photo",
+        "removePhoto": "Remove Photo",
+        "name": "Name",
+        "birthdate": "Birthday",
+        "gender": "I Am",
+        "interestedIn": "Interested In",
+        "ageRange": "Age Range",
+        "district": "District (Taipei)",
+        "availability": "Usually Free",
+        "dateStyles": "First Dates I’d Enjoy",
+        "dealbreakers": "Dealbreakers",
+        "dealbreakersPlaceholder": "Optional, e.g. smoking",
+        "about": "About Me",
+        "needs": "To approve: {{items}}",
+        "needPhoto": "add a photo",
+        "needBasics": "finish your basics",
+        "needAbout": "write a bit about yourself"
+      },
+      "interview": {
+        "intro": "Ryo will ask a few questions to set up your dating profile. Nothing is shown to anyone until you approve.",
+        "begin": "Begin",
+        "kickoff": "hi ryo, help me set up my dating profile",
+        "draftSaved": "Profile draft updated — check Profile",
+        "savingDraft": "Updating your profile…",
+        "call": "Call Ryo"
+      },
+      "help": {
+        "interview": {
+          "title": "Call Ryo",
+          "description": "Talk to Ryo to set up your dating profile"
+        },
+        "approve": {
+          "title": "Approve Your Profile",
+          "description": "Add photos, check your basics, and approve; nothing is shown until you do"
+        },
+        "weeklyMatch": {
+          "title": "Real Dates",
+          "description": "Ryo sets up dates with a time and place, not endless chats"
+        },
+        "doubleOptIn": {
+          "title": "Both Say Yes",
+          "description": "A date is on only when you both say yes"
+        },
+        "pauseLeave": {
+          "title": "Pause or Leave",
+          "description": "Pause anytime, or leave to delete your profile and photos"
+        }
+      },
+      "sidebar": {
+        "ryo": "Ryo",
+        "matches": "Matches"
+      },
+      "call": {
+        "listening": "Listening…",
+        "thinking": "Ryo is thinking…",
+        "talking": "Ryo is talking… tap to cut in",
+        "connecting": "Connecting…",
+        "hangUp": "Hang Up"
+      },
+      "genders": {
+        "woman": "Woman",
+        "man": "Man",
+        "nonbinary": "Nonbinary"
+      },
+      "districts": {
+        "zhongzheng": "Zhongzheng",
+        "datong": "Datong",
+        "zhongshan": "Zhongshan",
+        "songshan": "Songshan",
+        "daan": "Da’an",
+        "wanhua": "Wanhua",
+        "xinyi": "Xinyi",
+        "shilin": "Shilin",
+        "beitou": "Beitou",
+        "neihu": "Neihu",
+        "nangang": "Nangang",
+        "wenshan": "Wenshan"
+      },
+      "days": {
+        "mon": "Mon",
+        "tue": "Tue",
+        "wed": "Wed",
+        "thu": "Thu",
+        "fri": "Fri",
+        "sat": "Sat",
+        "sun": "Sun"
+      },
+      "dayParts": {
+        "morning": "Morning",
+        "afternoon": "Afternoon",
+        "evening": "Evening"
+      },
+      "dateStyles": {
+        "coffee": "Coffee",
+        "drinks": "Drinks",
+        "food": "Food",
+        "walk": "Walk",
+        "activity": "Activity"
+      },
+      "errors": {
+        "under_18": "Nee Hao Fine Shyt is for people 18 and older.",
+        "need_photo": "Add at least one photo to approve.",
+        "missing_basics": "Finish your basics to approve.",
+        "bad_photo": "That photo couldn’t be used. Try another one.",
+        "bad_age_range": "The lowest age can’t be above the highest age."
+      }
     }
   },
   "components": {

@@ -4934,6 +4934,152 @@
         "unknownArtist": "Artista Desconhecido"
       },
       "title": "Winamp"
+    },
+    "matchmaker": {
+      "name": "Nee Hao Fine Shyt",
+      "title": "Nee Hao Fine Shyt",
+      "description": "Ryo leva você a encontros de verdade",
+      "signIn": "Inicie sessão para usar o Nee Hao Fine Shyt",
+      "menu": {
+        "help": "Ajuda do Nee Hao Fine Shyt",
+        "about": "Sobre o Nee Hao Fine Shyt",
+        "refresh": "Atualizar"
+      },
+      "tabs": {
+        "week": "Esta semana",
+        "profile": "Perfil"
+      },
+      "week": {
+        "meet": "Conheça @{{username}}",
+        "why": "Por que vocês dois",
+        "opener": "Para quebrar o gelo",
+        "accept": "Dizer oi",
+        "pass": "Passar",
+        "block": "Bloquear",
+        "openChat": "Abrir conversa",
+        "waiting": "Você disse sim. Aguardando a outra pessoa…",
+        "youPassed": "Você passou este.",
+        "theyPassed": "A outra pessoa passou desta vez. Novo match na próxima semana.",
+        "intro": "Ryo leva você a encontros de verdade, não a conversas sem fim. Comece configurando seu perfil com Ryo.",
+        "start": "Começar",
+        "inPool": "Tudo pronto. Os planos de encontro chegam em breve: Ryo vai organizá-los aqui para você.",
+        "paused": "Os matches estão pausados. Retome na aba Perfil."
+      },
+      "profile": {
+        "hint": "É isso que seus encontros vão ver. Nada aparece até você aprovar.",
+        "placeholder": "Do que você gosta, um primeiro encontro ideal, a vibe que procura…",
+        "approve": "Aprovar",
+        "approved": "Aprovado ✓",
+        "pause": "Pausar",
+        "resume": "Retomar",
+        "leave": "Sair do Nee Hao Fine Shyt",
+        "photos": "Fotos",
+        "addPhoto": "Adicionar foto",
+        "removePhoto": "Remover foto",
+        "name": "Nome",
+        "birthdate": "Aniversário",
+        "gender": "Eu sou",
+        "interestedIn": "Interesse em",
+        "ageRange": "Faixa etária",
+        "district": "Distrito (Taipé)",
+        "availability": "Geralmente livre",
+        "dateStyles": "Primeiros encontros que eu curtiria",
+        "dealbreakers": "Inegociáveis",
+        "dealbreakersPlaceholder": "Opcional, ex.: fumar",
+        "about": "Sobre mim",
+        "needs": "Para aprovar: {{items}}",
+        "needPhoto": "adicione uma foto",
+        "needBasics": "complete seus dados básicos",
+        "needAbout": "escreva um pouco sobre você"
+      },
+      "interview": {
+        "intro": "Ryo vai fazer algumas perguntas para configurar seu perfil de encontros. Ninguém vê nada até você aprovar.",
+        "begin": "Iniciar",
+        "kickoff": "oi ryo, me ajuda a configurar meu perfil de encontros",
+        "draftSaved": "Rascunho do perfil atualizado — confira Perfil",
+        "savingDraft": "Atualizando seu perfil…",
+        "call": "Ligar para Ryo"
+      },
+      "help": {
+        "interview": {
+          "title": "Ligar para Ryo",
+          "description": "Converse com Ryo para configurar seu perfil de encontros"
+        },
+        "approve": {
+          "title": "Aprovar seu perfil",
+          "description": "Adicione fotos, confira seus dados e aprove; nada aparece antes disso"
+        },
+        "weeklyMatch": {
+          "title": "Encontros de verdade",
+          "description": "Ryo marca encontros com hora e lugar, não conversas sem fim"
+        },
+        "doubleOptIn": {
+          "title": "Os dois dizem sim",
+          "description": "Um encontro só é confirmado quando os dois dizem sim"
+        },
+        "pauseLeave": {
+          "title": "Pausar ou sair",
+          "description": "Pause quando quiser ou saia para apagar seu perfil e fotos"
+        }
+      },
+      "sidebar": {
+        "ryo": "Ryo",
+        "matches": "Matches"
+      },
+      "call": {
+        "listening": "Ouvindo…",
+        "thinking": "Ryo está pensando…",
+        "talking": "Ryo está falando… toque para interromper",
+        "connecting": "Conectando…",
+        "hangUp": "Desligar"
+      },
+      "genders": {
+        "woman": "Mulher",
+        "man": "Homem",
+        "nonbinary": "Não binário"
+      },
+      "districts": {
+        "zhongzheng": "Zhongzheng",
+        "datong": "Datong",
+        "zhongshan": "Zhongshan",
+        "songshan": "Songshan",
+        "daan": "Da’an",
+        "wanhua": "Wanhua",
+        "xinyi": "Xinyi",
+        "shilin": "Shilin",
+        "beitou": "Beitou",
+        "neihu": "Neihu",
+        "nangang": "Nangang",
+        "wenshan": "Wenshan"
+      },
+      "days": {
+        "mon": "Seg",
+        "tue": "Ter",
+        "wed": "Qua",
+        "thu": "Qui",
+        "fri": "Sex",
+        "sat": "Sáb",
+        "sun": "Dom"
+      },
+      "dayParts": {
+        "morning": "Manhã",
+        "afternoon": "Tarde",
+        "evening": "Noite"
+      },
+      "dateStyles": {
+        "coffee": "Café",
+        "drinks": "Drinks",
+        "food": "Comida",
+        "walk": "Passeio",
+        "activity": "Atividade"
+      },
+      "errors": {
+        "under_18": "Nee Hao Fine Shyt é só para maiores de 18 anos.",
+        "need_photo": "Adicione pelo menos uma foto para aprovar.",
+        "missing_basics": "Complete seus dados básicos para aprovar.",
+        "bad_photo": "Não foi possível usar essa foto. Tente outra.",
+        "bad_age_range": "A idade mínima não pode ser maior que a máxima."
+      }
     }
   },
   "common": {

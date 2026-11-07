@@ -4930,6 +4930,152 @@
         "unknownArtist": "不明なアーティスト"
       },
       "title": "Winamp"
+    },
+    "matchmaker": {
+      "name": "Nee Hao Fine Shyt",
+      "title": "Nee Hao Fine Shyt",
+      "description": "Ryo が本当のデートにつなげます",
+      "signIn": "Nee Hao Fine Shyt を使うにはサインインしてください",
+      "menu": {
+        "help": "Nee Hao Fine Shyt ヘルプ",
+        "about": "Nee Hao Fine Shyt について",
+        "refresh": "更新"
+      },
+      "tabs": {
+        "week": "今週",
+        "profile": "プロフィール"
+      },
+      "week": {
+        "meet": "@{{username}} さんに会ってみよう",
+        "why": "ふたりが合う理由",
+        "opener": "話のきっかけ",
+        "accept": "あいさつする",
+        "pass": "パス",
+        "block": "ブロック",
+        "openChat": "チャットを開く",
+        "waiting": "OKしました。相手の返事を待っています…",
+        "youPassed": "今回はパスしました。",
+        "theyPassed": "今回は相手がパスしました。来週また新しいマッチがあります。",
+        "intro": "Ryo は終わらないチャットではなく、本当のデートにつなげます。まずは Ryo とプロフィールを設定しましょう。",
+        "start": "はじめる",
+        "inPool": "準備完了です。デートプランは近日公開：Ryo がここで手配します。",
+        "paused": "マッチは一時停止中です。プロフィールタブから再開できます。"
+      },
+      "profile": {
+        "hint": "デート相手に表示される内容です。承認するまで誰にも表示されません。",
+        "placeholder": "好きなこと、理想の初デート、求める雰囲気…",
+        "approve": "承認",
+        "approved": "承認済み ✓",
+        "pause": "一時停止",
+        "resume": "再開",
+        "leave": "Nee Hao Fine Shyt をやめる",
+        "photos": "写真",
+        "addPhoto": "写真を追加",
+        "removePhoto": "写真を削除",
+        "name": "名前",
+        "birthdate": "誕生日",
+        "gender": "性別",
+        "interestedIn": "恋愛対象",
+        "ageRange": "年齢の範囲",
+        "district": "地区（台北）",
+        "availability": "空いている時間",
+        "dateStyles": "楽しめる初デート",
+        "dealbreakers": "絶対NG",
+        "dealbreakersPlaceholder": "任意（例：喫煙）",
+        "about": "自己紹介",
+        "needs": "承認するには：{{items}}",
+        "needPhoto": "写真を追加",
+        "needBasics": "基本情報を入力",
+        "needAbout": "自己紹介を少し書く"
+      },
+      "interview": {
+        "intro": "Ryo がいくつか質問してデート用プロフィールを設定します。承認するまで誰にも表示されません。",
+        "begin": "開始",
+        "kickoff": "ねえ ryo、デート用プロフィールを設定して",
+        "draftSaved": "プロフィールの下書きを更新しました。プロフィールを確認してください",
+        "savingDraft": "プロフィールを更新中…",
+        "call": "Ryo に電話"
+      },
+      "help": {
+        "interview": {
+          "title": "Ryo に電話",
+          "description": "Ryo と話してデート用プロフィールを設定"
+        },
+        "approve": {
+          "title": "プロフィールを承認",
+          "description": "写真を追加し、基本情報を確認して承認。承認するまで表示されません"
+        },
+        "weeklyMatch": {
+          "title": "本当のデート",
+          "description": "Ryo が日時と場所を決めてデートを手配します"
+        },
+        "doubleOptIn": {
+          "title": "お互いにOK",
+          "description": "お互いがOKしたときだけデートが成立します"
+        },
+        "pauseLeave": {
+          "title": "一時停止または退会",
+          "description": "いつでも一時停止、または退会してプロフィールと写真を削除"
+        }
+      },
+      "sidebar": {
+        "ryo": "Ryo",
+        "matches": "マッチ"
+      },
+      "call": {
+        "listening": "聞いています…",
+        "thinking": "Ryo が考えています…",
+        "talking": "Ryo が話しています… タップで割り込む",
+        "connecting": "接続中…",
+        "hangUp": "切る"
+      },
+      "genders": {
+        "woman": "女性",
+        "man": "男性",
+        "nonbinary": "ノンバイナリー"
+      },
+      "districts": {
+        "zhongzheng": "中正区",
+        "datong": "大同区",
+        "zhongshan": "中山区",
+        "songshan": "松山区",
+        "daan": "大安区",
+        "wanhua": "万華区",
+        "xinyi": "信義区",
+        "shilin": "士林区",
+        "beitou": "北投区",
+        "neihu": "内湖区",
+        "nangang": "南港区",
+        "wenshan": "文山区"
+      },
+      "days": {
+        "mon": "月",
+        "tue": "火",
+        "wed": "水",
+        "thu": "木",
+        "fri": "金",
+        "sat": "土",
+        "sun": "日"
+      },
+      "dayParts": {
+        "morning": "午前",
+        "afternoon": "午後",
+        "evening": "夜"
+      },
+      "dateStyles": {
+        "coffee": "コーヒー",
+        "drinks": "お酒",
+        "food": "食事",
+        "walk": "散歩",
+        "activity": "アクティビティ"
+      },
+      "errors": {
+        "under_18": "Nee Hao Fine Shyt は18歳以上の方のみご利用いただけます。",
+        "need_photo": "承認するには写真を1枚以上追加してください。",
+        "missing_basics": "承認するには基本情報を入力してください。",
+        "bad_photo": "この写真は使用できません。別の写真をお試しください。",
+        "bad_age_range": "最低年齢は最高年齢を超えられません。"
+      }
     }
   },
   "common": {

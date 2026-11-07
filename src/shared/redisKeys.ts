@@ -310,6 +310,30 @@ export const redisKeys = {
       redisKeyCaseSensitive("agent", "cursor", "run", runId, "meta"),
     cursorLatestRun: (agentId: string) =>
       redisKeyCaseSensitive("agent", "cursor", "agent", agentId, "latest-run"),
+    matchProfile: (username: string) =>
+      redisKey("agent", "matchmaker", "user", username, "profile"),
+    /** Agent-written draft, kept apart from the profile record so draft saves never race approvals. */
+    matchDraft: (username: string) =>
+      redisKey("agent", "matchmaker", "user", username, "draft"),
+    matchPhotos: (username: string) =>
+      redisKey("agent", "matchmaker", "user", username, "photos"),
+    matchDrop: (username: string) =>
+      redisKey("agent", "matchmaker", "user", username, "drop"),
+    matchSeen: (username: string) =>
+      redisKey("agent", "matchmaker", "user", username, "seen"),
+    matchBlocked: (username: string) =>
+      redisKey("agent", "matchmaker", "user", username, "blocked"),
+    matchPool: () => redisKey("agent", "matchmaker", "pool"),
+    /** Set of private room ids opened for a match; @ryo there runs the date concierge. */
+    matchRooms: () => redisKey("agent", "matchmaker", "rooms"),
+    /** Current date proposal (JSON) for one match room. */
+    matchProposal: (roomId: string) =>
+      redisKeyCaseSensitive("agent", "matchmaker", "room", roomId, "proposal"),
+    /** Hash of `{ [username]: "accepted" | "declined", roomId }` for one match. */
+    matchPair: (a: string, b: string, createdAt: number) =>
+      redisKey("agent", "matchmaker", "pair", ...[a, b].sort(), createdAt),
+    matchRoomLock: (a: string, b: string, createdAt: number) =>
+      redisKey("agent", "matchmaker", "pair", ...[a, b].sort(), createdAt, "room-lock"),
   },
   system: {
     userHeartbeats: (username: string, date: string) =>

@@ -21,6 +21,10 @@ export function getToolInvocationResultMessage(
     return null;
   }
 
+  if (toolName === "saveMatchProfileDraft") {
+    return t("apps.matchmaker.interview.draftSaved");
+  }
+
   let displayResultMessage: string | null = null;
     if (toolName === "listCursorCloudAgentRuns" && output && typeof output === "object") {
       const o = output as {

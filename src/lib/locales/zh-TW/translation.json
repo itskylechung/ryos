@@ -4930,6 +4930,152 @@
         "unknownArtist": "未知的藝人"
       },
       "title": "Winamp"
+    },
+    "matchmaker": {
+      "name": "Nee Hao Fine Shyt",
+      "title": "Nee Hao Fine Shyt",
+      "description": "Ryo 幫你約到真正的約會",
+      "signIn": "登入後即可使用 Nee Hao Fine Shyt",
+      "menu": {
+        "help": "Nee Hao Fine Shyt 輔助說明",
+        "about": "關於 Nee Hao Fine Shyt",
+        "refresh": "重新整理"
+      },
+      "tabs": {
+        "week": "本週",
+        "profile": "個人檔案"
+      },
+      "week": {
+        "meet": "認識一下 @{{username}}",
+        "why": "你們為什麼合拍",
+        "opener": "開場白",
+        "accept": "打聲招呼",
+        "pass": "略過",
+        "block": "封鎖",
+        "openChat": "打開聊天",
+        "waiting": "你已答應，正在等待對方…",
+        "youPassed": "你略過了這次配對。",
+        "theyPassed": "這次對方略過了。下週會有新的配對。",
+        "intro": "Ryo 幫你約到真正的約會，而不是聊個沒完。先和 Ryo 一起設定你的個人檔案吧。",
+        "start": "開始",
+        "inPool": "一切就緒。約會計畫即將推出：Ryo 會在這裡幫你安排。",
+        "paused": "配對已暫停。可在「個人檔案」標籤頁中恢復。"
+      },
+      "profile": {
+        "hint": "這是你的約會對象會看到的內容。在你核准之前不會顯示給任何人。",
+        "placeholder": "你喜歡什麼、理想的第一次約會、想要的感覺…",
+        "approve": "核准",
+        "approved": "已核准 ✓",
+        "pause": "暫停",
+        "resume": "恢復",
+        "leave": "退出 Nee Hao Fine Shyt",
+        "photos": "照片",
+        "addPhoto": "加入照片",
+        "removePhoto": "移除照片",
+        "name": "名字",
+        "birthdate": "生日",
+        "gender": "我是",
+        "interestedIn": "想認識",
+        "ageRange": "年齡範圍",
+        "district": "行政區（台北）",
+        "availability": "通常有空",
+        "dateStyles": "喜歡的第一次約會",
+        "dealbreakers": "地雷",
+        "dealbreakersPlaceholder": "選填，例如：抽菸",
+        "about": "關於我",
+        "needs": "核准前還需要：{{items}}",
+        "needPhoto": "加入一張照片",
+        "needBasics": "完成基本資料",
+        "needAbout": "寫一點關於你自己"
+      },
+      "interview": {
+        "intro": "Ryo 會問你幾個問題來設定約會檔案。在你核准之前，任何人都看不到。",
+        "begin": "開始",
+        "kickoff": "嗨 ryo，幫我設定約會檔案",
+        "draftSaved": "檔案草稿已更新——請查看「個人檔案」",
+        "savingDraft": "正在更新你的檔案…",
+        "call": "打給 Ryo"
+      },
+      "help": {
+        "interview": {
+          "title": "打給 Ryo",
+          "description": "和 Ryo 聊聊來設定你的約會檔案"
+        },
+        "approve": {
+          "title": "核准你的檔案",
+          "description": "加入照片、確認基本資料後核准；在你核准之前不會顯示"
+        },
+        "weeklyMatch": {
+          "title": "真正的約會",
+          "description": "Ryo 直接安排時間和地點，而不是聊個沒完"
+        },
+        "doubleOptIn": {
+          "title": "雙方都說好",
+          "description": "只有你們都說好，約會才會成立"
+        },
+        "pauseLeave": {
+          "title": "暫停或離開",
+          "description": "隨時可以暫停，或離開並刪除你的檔案和照片"
+        }
+      },
+      "sidebar": {
+        "ryo": "Ryo",
+        "matches": "配對"
+      },
+      "call": {
+        "listening": "正在聽…",
+        "thinking": "Ryo 正在思考…",
+        "talking": "Ryo 正在說話… 輕點即可插話",
+        "connecting": "正在連線…",
+        "hangUp": "掛斷"
+      },
+      "genders": {
+        "woman": "女生",
+        "man": "男生",
+        "nonbinary": "非二元"
+      },
+      "districts": {
+        "zhongzheng": "中正區",
+        "datong": "大同區",
+        "zhongshan": "中山區",
+        "songshan": "松山區",
+        "daan": "大安區",
+        "wanhua": "萬華區",
+        "xinyi": "信義區",
+        "shilin": "士林區",
+        "beitou": "北投區",
+        "neihu": "內湖區",
+        "nangang": "南港區",
+        "wenshan": "文山區"
+      },
+      "days": {
+        "mon": "一",
+        "tue": "二",
+        "wed": "三",
+        "thu": "四",
+        "fri": "五",
+        "sat": "六",
+        "sun": "日"
+      },
+      "dayParts": {
+        "morning": "上午",
+        "afternoon": "下午",
+        "evening": "晚上"
+      },
+      "dateStyles": {
+        "coffee": "咖啡",
+        "drinks": "小酌",
+        "food": "吃飯",
+        "walk": "散步",
+        "activity": "活動"
+      },
+      "errors": {
+        "under_18": "Nee Hao Fine Shyt 僅限 18 歲以上使用。",
+        "need_photo": "請至少加入一張照片才能核准。",
+        "missing_basics": "請完成基本資料才能核准。",
+        "bad_photo": "這張照片無法使用，請換一張。",
+        "bad_age_range": "最低年齡不能高於最高年齡。"
+      }
     }
   },
   "common": {

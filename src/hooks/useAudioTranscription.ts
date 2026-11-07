@@ -42,6 +42,8 @@ type DebugState = {
 export interface UseAudioTranscriptionProps {
   onTranscriptionComplete: (text: string) => void;
   onTranscriptionStart?: () => void;
+  /** Called once per recording after transcription settles (text, nothing heard, or error). */
+  onTranscriptionEnd?: () => void;
   onError?: (error: Error) => void;
   onDebugState?: (state: DebugState) => void;
   silenceThreshold?: number; // Duration in ms to wait before stopping
@@ -114,6 +116,7 @@ const analyzeAudioData = (
 export function useAudioTranscription({
   onTranscriptionComplete,
   onTranscriptionStart,
+  onTranscriptionEnd,
   onError,
   onDebugState,
   silenceThreshold = DEFAULT_SILENCE_THRESHOLD,
@@ -132,6 +135,8 @@ export function useAudioTranscription({
   onRecordingStateChangeRef.current = onRecordingStateChange;
   const onFrequenciesChangeRef = useRef(onFrequenciesChange);
   onFrequenciesChangeRef.current = onFrequenciesChange;
+  const onTranscriptionEndRef = useRef(onTranscriptionEnd);
+  onTranscriptionEndRef.current = onTranscriptionEnd;
 
   // Refs for audio handling
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -395,6 +400,7 @@ export function useAudioTranscription({
 
         // Then send for transcription
         await sendAudioForTranscription(currentChunks);
+        onTranscriptionEndRef.current?.();
       };
 
       // Start recording with smaller timeslice for more frequent data collection

@@ -33,10 +33,13 @@ const totalBytes = urls.reduce((total, url) => total + fileBytes(url), 0);
 // Rolldown (Vite 8) splits shared modules into more, smaller chunks than
 // Rollup did, so file-count ceilings sit above Rollup-era numbers. Vite 8.2
 // split the offline closure further (~272 files / ~258 scripts measured).
+// Matchmaker reuses Chats' message list/input, which splits ~10 previously
+// Chats-inlined modules into shared chunks (+10 files, +~33 KiB): measured
+// ~287 files / ~273 scripts.
 // The byte budget tracks the measured offline shell (Stuff + shelf apps
 // pushed it past 12 MiB); keep a small headroom for theme/CSS polish.
-const MAX_FILES = 285;
-const MAX_SCRIPTS = 270;
+const MAX_FILES = 300;
+const MAX_SCRIPTS = 285;
 const MAX_BYTES = 13 * 1024 * 1024;
 
 summarize("total", urls);

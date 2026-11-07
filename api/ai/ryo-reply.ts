@@ -5,14 +5,16 @@
  */
 
 import { generateText } from "ai";
-import { google } from "@ai-sdk/google";
 import { assertValidRoomId, escapeHTML, filterProfanityPreservingUrls } from "../_utils/_validation.js";
 import * as RateLimit from "../_utils/_rate-limit.js";
-import { roomExists, addMessage, generateId, getCurrentTimestamp } from "../rooms/_helpers/_redis.js";
+import { roomExists, addMessage, generateId, getCurrentTimestamp, getRoom } from "../rooms/_helpers/_redis.js";
 import { broadcastNewMessage } from "../rooms/_helpers/_pusher.js";
 import type { Message } from "../rooms/_helpers/_types.js";
 import { apiHandler } from "../_utils/api-handler.js";
 import { CHAT_ROOM_REPLY_INSTRUCTIONS } from "../_utils/_aiPrompts.js";
+import { getBackgroundModelSettings } from "../_utils/_aiModels.js";
+import { redisKeys } from "../../src/shared/redisKeys.js";
+import { runDateConcierge } from "../matchmaker/_concierge.js";
 
 interface RyoReplyRequest {
   roomId: string;
@@ -98,16 +100,36 @@ export default apiHandler<RyoReplyRequest>(
         : { role: "user" as const, content: prompt },
     ];
 
+    // Match rooms get Ryo as date concierge (tools: free times, venues,
+    // weather, propose/confirm → both Calendars); everywhere else, plain chat.
+    const room = (await redis.sismember(redisKeys.agent.matchRooms(), roomId))
+      ? await getRoom(roomId, redis)
+      : null;
+    const dateRoomMembers =
+      room?.members?.length === 2 && room.members.includes(username) ? room.members : null;
+
     let replyText = "";
     try {
-      logger.info("Generating AI reply", { roomId, promptLength: prompt.length });
-      const { text } = await generateText({
-        model: google("gemini-3-flash-preview"),
-        instructions: CHAT_ROOM_REPLY_INSTRUCTIONS,
-        messages,
-        temperature: 0.6,
-      });
-      replyText = text;
+      logger.info("Generating AI reply", { roomId, promptLength: prompt.length, dateRoom: !!dateRoomMembers });
+      if (dateRoomMembers) {
+        replyText = await runDateConcierge({
+          redis,
+          roomId,
+          members: dateRoomMembers,
+          requester: username,
+          prompt,
+          recentMessages: systemState?.chatRoomContext?.recentMessages ?? "",
+          log: (...args) => logger.info("date concierge", { args }),
+          logError: (...args) => logger.error("date concierge", args),
+        });
+      } else {
+        const { text } = await generateText({
+          ...getBackgroundModelSettings(0.6),
+          instructions: CHAT_ROOM_REPLY_INSTRUCTIONS,
+          messages,
+        });
+        replyText = text;
+      }
       logger.info("AI reply generated", { replyLength: replyText.length });
     } catch (e) {
       logger.error("AI generation failed for Ryo reply", e);

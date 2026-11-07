@@ -49,7 +49,8 @@ export interface BaseApp<TInitialData = unknown> {
     | "maps"
     | "books"
     | "calculator"
-    | "stuff";
+    | "stuff"
+    | "matchmaker";
   name: string;
   icon: string | { type: "image"; src: string };
   description: string;

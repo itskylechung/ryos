@@ -21,7 +21,6 @@
  * that slip through without an extra API call.
  */
 
-import { google } from "@ai-sdk/google";
 import { generateText, NoObjectGeneratedError, Output } from "ai";
 import { z } from "zod";
 import * as RateLimit from "../_utils/_rate-limit.js";
@@ -32,6 +31,7 @@ import {
   getYouTubeApiKeys,
   youtubeSearch,
 } from "../_utils/youtube-client.js";
+import { getBackgroundModelSettings } from "../_utils/_aiModels.js";
 
 const RequestSchema = z.object({
   description: z
@@ -189,7 +189,7 @@ export default apiHandler<CreateChannelRequest>(
     let plan: z.infer<typeof ChannelPlanSchema>;
     try {
       const { output } = await generateText({
-        model: google("gemini-3-flash-preview"),
+        ...getBackgroundModelSettings(0.5),
         instructions: SYSTEM_PROMPT,
         output: Output.object({
           schema: ChannelPlanSchema,
@@ -201,7 +201,6 @@ export default apiHandler<CreateChannelRequest>(
             content: `Description: ${description}`,
           },
         ],
-        temperature: 0.5,
       });
       if (!output) throw new Error("AI returned no plan");
       plan = output;

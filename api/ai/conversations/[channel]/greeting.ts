@@ -1,6 +1,5 @@
 import { z } from "zod";
 import { generateText } from "ai";
-import { google } from "@ai-sdk/google";
 import { waitUntil } from "../../../_utils/_background.js";
 import { getClientIp } from "../../../_utils/_rate-limit.js";
 import { apiHandler } from "../../../_utils/api-handler.js";
@@ -23,6 +22,7 @@ import {
   AI_CONVERSATION_OPERATION_ID_MAX_LENGTH,
   AI_PROACTIVE_GREETING_MESSAGE_ID_PREFIX,
 } from "../../../../src/shared/contracts/aiConversation.js";
+import { getBackgroundModelSettings } from "../../../_utils/_aiModels.js";
 
 const greetingRequestSchema = z.object({
   operationId: z
@@ -154,8 +154,7 @@ ${greetingMemoryContext}
 Generate ONE short proactive greeting. Pick one interesting angle from the context — a recent topic, a memory, something timely — and use it naturally. Don't try to cover everything.`;
 
       const { text } = await generateText({
-        model: google("gemini-3-flash-preview"),
-        temperature: 1,
+        ...getBackgroundModelSettings(1),
         maxOutputTokens: 2000,
         instructions: PROACTIVE_GREETING_INSTRUCTIONS,
         messages: [

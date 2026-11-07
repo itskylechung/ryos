@@ -159,6 +159,9 @@ export function getToolInvocationCallMessage(
             });
         break;
       }
+      case "saveMatchProfileDraft":
+        displayCallMessage = t("apps.matchmaker.interview.savingDraft");
+        break;
       case "memoryWrite":
         displayCallMessage = t("apps.chats.toolCalls.memory.saving");
         break;
