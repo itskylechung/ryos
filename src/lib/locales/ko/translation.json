@@ -4932,13 +4932,13 @@
       "title": "Winamp"
     },
     "matchmaker": {
-      "name": "Matchmaker",
-      "title": "Matchmaker",
-      "description": "만나면 좋을 사람을 매주 소개",
-      "signIn": "Matchmaker를 사용하려면 로그인하세요",
+      "name": "Nee Hao Fine Shyt",
+      "title": "Nee Hao Fine Shyt",
+      "description": "Ryo가 진짜 데이트로 이어 드려요",
+      "signIn": "Nee Hao Fine Shyt를 사용하려면 로그인하세요",
       "menu": {
-        "help": "Matchmaker 도움말",
-        "about": "Matchmaker에 관하여",
+        "help": "Nee Hao Fine Shyt 도움말",
+        "about": "Nee Hao Fine Shyt에 관하여",
         "refresh": "새로 고침"
       },
       "tabs": {
@@ -4956,52 +4956,125 @@
         "waiting": "수락했어요. 상대방을 기다리는 중…",
         "youPassed": "이번 매치는 넘겼어요.",
         "theyPassed": "이번에는 상대방이 넘겼어요. 다음 주에 새 매치가 와요.",
-        "intro": "일주일에 한 번, Ryo가 만나면 좋을 한 사람을 소개해 드려요. 친구나 협업 상대로요.",
+        "intro": "Ryo는 끝없는 채팅이 아니라 진짜 데이트로 이어 드려요. 먼저 Ryo와 프로필을 설정하세요.",
         "start": "시작하기",
-        "inPool": "참여 중이에요. 다음 매치는 이번 주에 도착해요.",
+        "inPool": "준비 완료! 데이트 플랜은 곧 제공됩니다. Ryo가 여기서 준비해 드려요.",
         "paused": "매치가 일시 정지되었어요. 프로필 탭에서 재개하세요."
       },
       "profile": {
-        "hint": "매치 상대에게 보이는 내용이에요. 승인하기 전에는 아무것도 공유되지 않아요.",
-        "placeholder": "만들고 있는 것, 빠져 있는 것, 만나고 싶은 사람…",
+        "hint": "데이트 상대에게 보이는 내용이에요. 승인하기 전에는 아무에게도 보이지 않아요.",
+        "placeholder": "좋아하는 것, 이상적인 첫 데이트, 원하는 분위기…",
         "approve": "승인",
         "approved": "승인됨 ✓",
         "pause": "일시 정지",
         "resume": "재개",
-        "leave": "Matchmaker 나가기"
+        "leave": "Nee Hao Fine Shyt 나가기",
+        "photos": "사진",
+        "addPhoto": "사진 추가",
+        "removePhoto": "사진 제거",
+        "name": "이름",
+        "birthdate": "생일",
+        "gender": "성별",
+        "interestedIn": "관심 대상",
+        "ageRange": "나이 범위",
+        "district": "지역(타이베이)",
+        "availability": "주로 시간 되는 때",
+        "dateStyles": "좋아하는 첫 데이트",
+        "dealbreakers": "절대 안 되는 것",
+        "dealbreakersPlaceholder": "선택 사항, 예: 흡연",
+        "about": "자기소개",
+        "needs": "승인하려면: {{items}}",
+        "needPhoto": "사진 추가",
+        "needBasics": "기본 정보 완성",
+        "needAbout": "자기소개 조금 쓰기"
       },
       "interview": {
-        "intro": "Ryo가 몇 가지 질문을 하고 프로필 초안을 작성해요. 공유되기 전에 검토할 수 있어요.",
+        "intro": "Ryo가 몇 가지 질문으로 데이트 프로필을 설정해요. 승인하기 전에는 아무에게도 보이지 않아요.",
         "begin": "시작",
-        "kickoff": "안녕 ryo, 매치 프로필 만드는 것 좀 도와줘",
+        "kickoff": "안녕 ryo, 데이트 프로필 설정을 도와줘",
         "draftSaved": "프로필 초안이 업데이트되었어요 — 프로필을 확인하세요",
-        "savingDraft": "프로필 업데이트 중…"
+        "savingDraft": "프로필 업데이트 중…",
+        "call": "Ryo에게 전화"
       },
       "help": {
         "interview": {
-          "title": "인터뷰",
-          "description": "만들고 있는 것과 만나고 싶은 사람에 대해 Ryo와 이야기하세요"
+          "title": "Ryo에게 전화",
+          "description": "Ryo와 이야기하며 데이트 프로필 설정"
         },
         "approve": {
           "title": "프로필 승인",
-          "description": "Ryo가 짧은 프로필 초안을 작성해요. 편집하고 승인하기 전에는 공유되지 않아요"
+          "description": "사진을 추가하고 기본 정보를 확인한 뒤 승인하세요. 승인 전에는 보이지 않아요"
         },
         "weeklyMatch": {
-          "title": "주간 매치",
-          "description": "일주일에 한 번 Ryo가 한 사람을 소개하고 두 사람이 만나야 하는 이유를 알려 줘요"
+          "title": "진짜 데이트",
+          "description": "Ryo가 시간과 장소를 정해 데이트를 잡아 드려요"
         },
         "doubleOptIn": {
-          "title": "양쪽 동의",
-          "description": "둘 다 수락하면 Ryo가 대화 주제와 함께 비공개 채팅을 열어요"
+          "title": "둘 다 좋아요",
+          "description": "둘 다 좋다고 해야 데이트가 성사돼요"
         },
         "pauseLeave": {
-          "title": "일시 정지 또는 나가기",
-          "description": "언제든 매치를 일시 정지하거나, 나가서 프로필을 삭제할 수 있어요"
+          "title": "일시 정지 또는 탈퇴",
+          "description": "언제든 일시 정지하거나 탈퇴해 프로필과 사진을 삭제"
         }
       },
       "sidebar": {
         "ryo": "Ryo",
         "matches": "매치"
+      },
+      "call": {
+        "listening": "듣는 중…",
+        "thinking": "Ryo가 생각 중…",
+        "talking": "Ryo가 말하는 중… 탭하여 끼어들기",
+        "connecting": "연결 중…",
+        "hangUp": "끊기"
+      },
+      "genders": {
+        "woman": "여성",
+        "man": "남성",
+        "nonbinary": "논바이너리"
+      },
+      "districts": {
+        "zhongzheng": "중정구",
+        "datong": "다퉁구",
+        "zhongshan": "중산구",
+        "songshan": "쑹산구",
+        "daan": "다안구",
+        "wanhua": "완화구",
+        "xinyi": "신이구",
+        "shilin": "스린구",
+        "beitou": "베이터우구",
+        "neihu": "네이후구",
+        "nangang": "난강구",
+        "wenshan": "원산구"
+      },
+      "days": {
+        "mon": "월",
+        "tue": "화",
+        "wed": "수",
+        "thu": "목",
+        "fri": "금",
+        "sat": "토",
+        "sun": "일"
+      },
+      "dayParts": {
+        "morning": "오전",
+        "afternoon": "오후",
+        "evening": "저녁"
+      },
+      "dateStyles": {
+        "coffee": "커피",
+        "drinks": "술 한잔",
+        "food": "식사",
+        "walk": "산책",
+        "activity": "액티비티"
+      },
+      "errors": {
+        "under_18": "Nee Hao Fine Shyt는 만 18세 이상만 이용할 수 있어요.",
+        "need_photo": "승인하려면 사진을 한 장 이상 추가하세요.",
+        "missing_basics": "승인하려면 기본 정보를 완성하세요.",
+        "bad_photo": "이 사진은 사용할 수 없어요. 다른 사진을 시도하세요.",
+        "bad_age_range": "최소 나이는 최대 나이보다 클 수 없어요."
       }
     }
   },

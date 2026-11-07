@@ -4932,13 +4932,13 @@
       "title": "Winamp"
     },
     "matchmaker": {
-      "name": "Matchmaker",
-      "title": "Matchmaker",
-      "description": "Wöchentliche Vorstellungen von Leuten, die du kennenlernen solltest",
-      "signIn": "Melde dich an, um Matchmaker zu verwenden",
+      "name": "Nee Hao Fine Shyt",
+      "title": "Nee Hao Fine Shyt",
+      "description": "Ryo bringt dich zu echten Dates",
+      "signIn": "Melde dich an, um Nee Hao Fine Shyt zu verwenden",
       "menu": {
-        "help": "Hilfe zu Matchmaker",
-        "about": "Über Matchmaker",
+        "help": "Hilfe zu Nee Hao Fine Shyt",
+        "about": "Über Nee Hao Fine Shyt",
         "refresh": "Aktualisieren"
       },
       "tabs": {
@@ -4956,52 +4956,125 @@
         "waiting": "Du hast zugesagt. Warte auf die andere Person…",
         "youPassed": "Diesen Match hast du übersprungen.",
         "theyPassed": "Diesmal hat die andere Person abgelehnt. Nächste Woche gibt es einen neuen Match.",
-        "intro": "Einmal pro Woche stellt Ryo dir eine Person vor, die du kennenlernen solltest – als Freund oder für ein gemeinsames Projekt.",
+        "intro": "Ryo bringt dich zu echten Dates statt endlosem Chatten. Richte zuerst mit Ryo dein Profil ein.",
         "start": "Loslegen",
-        "inPool": "Du bist dabei. Dein nächster Match kommt diese Woche.",
+        "inPool": "Alles bereit. Date-Pläne kommen als Nächstes: Ryo plant sie hier für dich.",
         "paused": "Matches sind pausiert. Fortsetzen im Tab „Profil“."
       },
       "profile": {
-        "hint": "Das sieht dein Match. Nichts wird geteilt, bevor du es freigibst.",
-        "placeholder": "Woran du arbeitest, was dich begeistert, wen du kennenlernen möchtest…",
+        "hint": "Das sehen deine Dates. Nichts wird angezeigt, bevor du es freigibst.",
+        "placeholder": "Was du magst, ein tolles erstes Date, der Vibe, den du suchst …",
         "approve": "Freigeben",
         "approved": "Freigegeben ✓",
         "pause": "Pausieren",
         "resume": "Fortsetzen",
-        "leave": "Matchmaker verlassen"
+        "leave": "Nee Hao Fine Shyt verlassen",
+        "photos": "Fotos",
+        "addPhoto": "Foto hinzufügen",
+        "removePhoto": "Foto entfernen",
+        "name": "Name",
+        "birthdate": "Geburtstag",
+        "gender": "Ich bin",
+        "interestedIn": "Interessiert an",
+        "ageRange": "Altersbereich",
+        "district": "Bezirk (Taipeh)",
+        "availability": "Meist frei",
+        "dateStyles": "Erste Dates, die mir gefallen",
+        "dealbreakers": "No-Gos",
+        "dealbreakersPlaceholder": "Optional, z. B. Rauchen",
+        "about": "Über mich",
+        "needs": "Zum Freigeben: {{items}}",
+        "needPhoto": "ein Foto hinzufügen",
+        "needBasics": "Grunddaten ausfüllen",
+        "needAbout": "etwas über dich schreiben"
       },
       "interview": {
-        "intro": "Ryo stellt dir ein paar Fragen und entwirft dein Profil. Du prüfst es, bevor etwas geteilt wird.",
+        "intro": "Ryo stellt dir ein paar Fragen, um dein Dating-Profil einzurichten. Niemand sieht etwas, bevor du es freigibst.",
         "begin": "Starten",
-        "kickoff": "hi ryo, hilf mir, mein Match-Profil einzurichten",
+        "kickoff": "hi ryo, hilf mir, mein dating-profil einzurichten",
         "draftSaved": "Profilentwurf aktualisiert – sieh unter „Profil“ nach",
-        "savingDraft": "Profil wird aktualisiert…"
+        "savingDraft": "Profil wird aktualisiert…",
+        "call": "Ryo anrufen"
       },
       "help": {
         "interview": {
-          "title": "Interview",
-          "description": "Erzähl Ryo, woran du arbeitest und wen du kennenlernen möchtest"
+          "title": "Ryo anrufen",
+          "description": "Sprich mit Ryo, um dein Dating-Profil einzurichten"
         },
         "approve": {
           "title": "Profil freigeben",
-          "description": "Ryo entwirft ein kurzes Profil; nichts wird geteilt, bevor du es bearbeitest und freigibst"
+          "description": "Fotos hinzufügen, Grunddaten prüfen und freigeben; vorher wird nichts angezeigt"
         },
         "weeklyMatch": {
-          "title": "Wöchentlicher Match",
-          "description": "Einmal pro Woche stellt Ryo dir eine Person vor und sagt, warum ihr euch treffen solltet"
+          "title": "Echte Dates",
+          "description": "Ryo plant Dates mit Zeit und Ort statt endloser Chats"
         },
         "doubleOptIn": {
-          "title": "Beidseitige Zustimmung",
-          "description": "Wenn ihr beide zusagt, öffnet Ryo einen privaten Chat mit einem Eisbrecher"
+          "title": "Beide sagen Ja",
+          "description": "Ein Date steht erst, wenn ihr beide Ja sagt"
         },
         "pauseLeave": {
           "title": "Pausieren oder verlassen",
-          "description": "Pausiere Matches jederzeit oder verlasse Matchmaker, um dein Profil zu löschen"
+          "description": "Jederzeit pausieren oder verlassen und Profil und Fotos löschen"
         }
       },
       "sidebar": {
         "ryo": "Ryo",
         "matches": "Matches"
+      },
+      "call": {
+        "listening": "Hört zu…",
+        "thinking": "Ryo denkt nach…",
+        "talking": "Ryo spricht… zum Unterbrechen tippen",
+        "connecting": "Verbinden…",
+        "hangUp": "Auflegen"
+      },
+      "genders": {
+        "woman": "Frau",
+        "man": "Mann",
+        "nonbinary": "Nichtbinär"
+      },
+      "districts": {
+        "zhongzheng": "Zhongzheng",
+        "datong": "Datong",
+        "zhongshan": "Zhongshan",
+        "songshan": "Songshan",
+        "daan": "Da’an",
+        "wanhua": "Wanhua",
+        "xinyi": "Xinyi",
+        "shilin": "Shilin",
+        "beitou": "Beitou",
+        "neihu": "Neihu",
+        "nangang": "Nangang",
+        "wenshan": "Wenshan"
+      },
+      "days": {
+        "mon": "Mo",
+        "tue": "Di",
+        "wed": "Mi",
+        "thu": "Do",
+        "fri": "Fr",
+        "sat": "Sa",
+        "sun": "So"
+      },
+      "dayParts": {
+        "morning": "Morgens",
+        "afternoon": "Nachmittags",
+        "evening": "Abends"
+      },
+      "dateStyles": {
+        "coffee": "Kaffee",
+        "drinks": "Drinks",
+        "food": "Essen",
+        "walk": "Spaziergang",
+        "activity": "Aktivität"
+      },
+      "errors": {
+        "under_18": "Nee Hao Fine Shyt ist erst ab 18 Jahren.",
+        "need_photo": "Füge mindestens ein Foto hinzu, um freizugeben.",
+        "missing_basics": "Fülle deine Grunddaten aus, um freizugeben.",
+        "bad_photo": "Dieses Foto kann nicht verwendet werden. Versuche ein anderes.",
+        "bad_age_range": "Das Mindestalter darf nicht über dem Höchstalter liegen."
       }
     }
   },

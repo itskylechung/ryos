@@ -82,7 +82,7 @@ export const appNames: Record<AppId, string> = {
   "books": "Books",
   "calculator": "Calculator",
   "stuff": "Stuff",
-  "matchmaker": "Matchmaker",
+  "matchmaker": "Nee Hao Fine Shyt",
 };
 
 /** Get list of apps with basic info for stores */

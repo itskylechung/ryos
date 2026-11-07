@@ -1,10 +1,11 @@
 /**
  * POST /api/matchmaker/chat
  *
- * Matchmaker intake interview. Runs Ryo's ToolLoopAgent (`matchmakerIntake`
- * preset) with one tool, `saveMatchProfileDraft`. Long-term memory summaries
- * are injected so Ryo can pre-fill a draft — the draft is never shared until
- * the user approves it via /api/matchmaker/profile.
+ * Dating onboarding interview. Runs Ryo's ToolLoopAgent (`matchmakerIntake`
+ * preset) with two tools: `saveDatingBasics` (structured fields, 18+ enforced
+ * here) and `saveMatchProfileDraft` (the profile text). Long-term memory
+ * summaries are injected so Ryo can pre-fill a draft — nothing is shared
+ * until the user approves it via /api/matchmaker/profile.
  */
 
 import {
@@ -24,15 +25,26 @@ import {
   createRyoToolLoopAgent,
   RYO_AGENT_TIMEOUTS,
 } from "../_utils/ryo-agent.js";
-import { upsertSpeechDraft } from "../_utils/speech-permit-store.js";
+import { waitUntil } from "../_utils/_background.js";
+import {
+  upsertSpeechDraft,
+  writeSpeechDraftFromTextStream,
+} from "../_utils/speech-permit-store.js";
 import { resolveSpeechOwner } from "../_utils/speech-permit.js";
 import { getAssistantVisibleText } from "../../src/apps/chats/utils/aiMessageText.js";
 import {
+  getPhotos,
   getProfile,
   MATCHMAKER_MODEL_ID,
   MAX_PROFILE_CHARS,
+  saveBasics,
   saveDraft,
 } from "./_lib.js";
+import {
+  datingBasicsSchema,
+  isAdult,
+  missingBasics,
+} from "../../src/shared/dating.js";
 
 const MAX_HISTORY = 30;
 
@@ -59,6 +71,22 @@ export default apiHandler(
     }
 
     const tools = {
+      saveDatingBasics: tool({
+        description:
+          "Save dating basics as you learn them. Pass only the fields you just learned; " +
+          "they merge into what's already saved.",
+        inputSchema: datingBasicsSchema,
+        execute: async (patch) => {
+          if (patch.birthdate && !isAdult(patch.birthdate)) {
+            return { saved: false, error: "under_18: this app is 18+ only. Stop onboarding." };
+          }
+          if (patch.ageMin && patch.ageMax && patch.ageMin > patch.ageMax) {
+            return { saved: false, error: "ageMin is above ageMax" };
+          }
+          const next = await saveBasics(redis, username, patch);
+          return { saved: true, missing: missingBasics(next.basics) };
+        },
+      }),
       saveMatchProfileDraft: tool({
         description:
           "Save the user's full match profile draft (first person, 2-5 sentences). " +
@@ -88,9 +116,10 @@ export default apiHandler(
       return;
     }
 
-    const [memoryIndex, profile] = await Promise.all([
+    const [memoryIndex, profile, photos] = await Promise.all([
       getMemoryIndex(redis, username),
       getProfile(redis, username),
+      getPhotos(redis, username),
     ]);
     const remembered =
       memoryIndex?.memories.map((m) => `- ${m.key}: ${m.summary}`).join("\n") ||
@@ -100,6 +129,9 @@ export default apiHandler(
       content:
         `USERNAME: ${username}\n\n` +
         `WHAT RYO REMEMBERS (private, user must approve anything shared):\n${remembered}\n\n` +
+        `CURRENT BASICS:\n${JSON.stringify(profile.basics)}\n` +
+        `MISSING: ${missingBasics(profile.basics).join(", ") || "(none)"}\n` +
+        `PHOTOS: ${photos.length}\n\n` +
         `CURRENT DRAFT:\n${profile.draft ?? "(none)"}\n\n` +
         `APPROVED PROFILE:\n${profile.approved ?? "(none)"}`,
     };
@@ -128,18 +160,29 @@ export default apiHandler(
         timeout: RYO_AGENT_TIMEOUTS.matchmakerIntake,
       });
       if (origin) res.setHeader("Access-Control-Allow-Origin", origin);
+      // Speech permits for Ryo's voice: streamed drafts let a voice call speak
+      // while the reply is still arriving; onEnd writes the final text.
+      const speechMessageId = crypto.randomUUID();
+      const speechOwner = resolveSpeechOwner({ username, ip: "" });
+      waitUntil(
+        writeSpeechDraftFromTextStream({
+          redis,
+          owner: speechOwner,
+          messageId: speechMessageId,
+          textStream: result.textStream,
+        }).catch((error) => logger.error("Matchmaker streaming speech draft failed", error))
+      );
       result.pipeUIMessageStreamToResponse(res, {
         status: 200,
         originalMessages: uiMessages,
-        generateMessageId: () => crypto.randomUUID(),
-        // Lets the reused Chats speak button get a speech permit for Ryo's reply.
+        generateMessageId: () => speechMessageId,
         onEnd: async ({ responseMessage }) => {
           const text = getAssistantVisibleText(responseMessage);
           if (!text) return;
           await upsertSpeechDraft({
             redis,
-            owner: resolveSpeechOwner({ username, ip: "" }),
-            messageId: responseMessage.id,
+            owner: speechOwner,
+            messageId: responseMessage.id || speechMessageId,
             text,
           }).catch((error) => logger.error("Matchmaker speech draft failed", error));
         },

@@ -639,7 +639,7 @@ export const appRegistry = {
   },
   ["matchmaker"]: {
     id: "matchmaker",
-    name: "Matchmaker",
+    name: "Nee Hao Fine Shyt",
     icon: { type: "image", src: matchmakerMetadata.icon },
     description: "Weekly intros to people you should meet",
     component: LazyMatchmakerApp,

@@ -69,7 +69,8 @@ export function useRyoChat({
             systemState: systemStateWithChat,
           }),
           signal: controller.signal,
-          timeout: 20000,
+          // Date rooms run a multi-step tool loop (times, weather, venues).
+          timeout: 45000,
           retry: { maxAttempts: 1, initialDelayMs: 250 },
         });
       } catch (error) {

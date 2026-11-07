@@ -4936,13 +4936,13 @@
       "title": "Winamp"
     },
     "matchmaker": {
-      "name": "Matchmaker",
-      "title": "Matchmaker",
-      "description": "Presentaciones semanales a personas que deberías conocer",
-      "signIn": "Inicia sesión para usar Matchmaker",
+      "name": "Nee Hao Fine Shyt",
+      "title": "Nee Hao Fine Shyt",
+      "description": "Ryo te lleva a citas reales",
+      "signIn": "Inicia sesión para usar Nee Hao Fine Shyt",
       "menu": {
-        "help": "Ayuda de Matchmaker",
-        "about": "Acerca de Matchmaker",
+        "help": "Ayuda de Nee Hao Fine Shyt",
+        "about": "Acerca de Nee Hao Fine Shyt",
         "refresh": "Actualizar"
       },
       "tabs": {
@@ -4960,52 +4960,125 @@
         "waiting": "Dijiste que sí. Esperando a la otra persona…",
         "youPassed": "Pasaste de esta.",
         "theyPassed": "La otra persona pasó esta vez. Nuevo match la próxima semana.",
-        "intro": "Una vez a la semana, Ryo te presenta a una persona que deberías conocer: un amigo o un colaborador.",
+        "intro": "Ryo te lleva a citas reales, no a chats eternos. Empieza configurando tu perfil con Ryo.",
         "start": "Empezar",
-        "inPool": "Ya estás dentro. Tu próximo match llega esta semana.",
+        "inPool": "Todo listo. Los planes de cita llegan pronto: Ryo los organizará aquí para ti.",
         "paused": "Los matches están en pausa. Reanúdalos desde la pestaña Perfil."
       },
       "profile": {
-        "hint": "Esto es lo que ve tu match. No se comparte nada hasta que lo apruebes.",
-        "placeholder": "Qué estás construyendo, qué te apasiona, a quién te gustaría conocer…",
+        "hint": "Esto es lo que verán tus citas. No se muestra nada hasta que lo apruebes.",
+        "placeholder": "Lo que te gusta, una gran primera cita, el estilo que buscas…",
         "approve": "Aprobar",
         "approved": "Aprobado ✓",
         "pause": "Pausar",
         "resume": "Reanudar",
-        "leave": "Salir de Matchmaker"
+        "leave": "Salir de Nee Hao Fine Shyt",
+        "photos": "Fotos",
+        "addPhoto": "Añadir foto",
+        "removePhoto": "Eliminar foto",
+        "name": "Nombre",
+        "birthdate": "Cumpleaños",
+        "gender": "Soy",
+        "interestedIn": "Me interesan",
+        "ageRange": "Rango de edad",
+        "district": "Distrito (Taipéi)",
+        "availability": "Normalmente libre",
+        "dateStyles": "Primeras citas que disfrutaría",
+        "dealbreakers": "Factores decisivos",
+        "dealbreakersPlaceholder": "Opcional, p. ej., fumar",
+        "about": "Sobre mí",
+        "needs": "Para aprobar: {{items}}",
+        "needPhoto": "añade una foto",
+        "needBasics": "completa tus datos básicos",
+        "needAbout": "escribe algo sobre ti"
       },
       "interview": {
-        "intro": "Ryo te hará unas preguntas y redactará tu perfil. Lo revisarás antes de que se comparta nada.",
+        "intro": "Ryo te hará algunas preguntas para configurar tu perfil de citas. Nadie verá nada hasta que lo apruebes.",
         "begin": "Comenzar",
-        "kickoff": "hola ryo, ayúdame a crear mi perfil de match",
+        "kickoff": "hola ryo, ayúdame a configurar mi perfil de citas",
         "draftSaved": "Borrador del perfil actualizado: revisa Perfil",
-        "savingDraft": "Actualizando tu perfil…"
+        "savingDraft": "Actualizando tu perfil…",
+        "call": "Llamar a Ryo"
       },
       "help": {
         "interview": {
-          "title": "Entrevista",
-          "description": "Cuéntale a Ryo qué estás construyendo y a quién te gustaría conocer"
+          "title": "Llamar a Ryo",
+          "description": "Habla con Ryo para configurar tu perfil de citas"
         },
         "approve": {
-          "title": "Aprueba tu perfil",
-          "description": "Ryo redacta un perfil breve; no se comparte nada hasta que lo edites y apruebes"
+          "title": "Aprobar tu perfil",
+          "description": "Añade fotos, revisa tus datos y aprueba; no se muestra nada hasta entonces"
         },
         "weeklyMatch": {
-          "title": "Match semanal",
-          "description": "Una vez a la semana Ryo te presenta a una persona y te dice por qué deberían conocerse"
+          "title": "Citas reales",
+          "description": "Ryo organiza citas con hora y lugar, no chats eternos"
         },
         "doubleOptIn": {
-          "title": "Doble confirmación",
-          "description": "Si ambos aceptan, Ryo abre un chat privado con un tema para romper el hielo"
+          "title": "Los dos dicen sí",
+          "description": "Una cita solo se confirma cuando ambos dicen sí"
         },
         "pauseLeave": {
           "title": "Pausar o salir",
-          "description": "Pausa los matches cuando quieras o sal para eliminar tu perfil"
+          "description": "Pausa cuando quieras o sal para eliminar tu perfil y fotos"
         }
       },
       "sidebar": {
         "ryo": "Ryo",
         "matches": "Matches"
+      },
+      "call": {
+        "listening": "Escuchando…",
+        "thinking": "Ryo está pensando…",
+        "talking": "Ryo está hablando… toca para interrumpir",
+        "connecting": "Conectando…",
+        "hangUp": "Colgar"
+      },
+      "genders": {
+        "woman": "Mujer",
+        "man": "Hombre",
+        "nonbinary": "No binario"
+      },
+      "districts": {
+        "zhongzheng": "Zhongzheng",
+        "datong": "Datong",
+        "zhongshan": "Zhongshan",
+        "songshan": "Songshan",
+        "daan": "Da’an",
+        "wanhua": "Wanhua",
+        "xinyi": "Xinyi",
+        "shilin": "Shilin",
+        "beitou": "Beitou",
+        "neihu": "Neihu",
+        "nangang": "Nangang",
+        "wenshan": "Wenshan"
+      },
+      "days": {
+        "mon": "Lun",
+        "tue": "Mar",
+        "wed": "Mié",
+        "thu": "Jue",
+        "fri": "Vie",
+        "sat": "Sáb",
+        "sun": "Dom"
+      },
+      "dayParts": {
+        "morning": "Mañana",
+        "afternoon": "Tarde",
+        "evening": "Noche"
+      },
+      "dateStyles": {
+        "coffee": "Café",
+        "drinks": "Copas",
+        "food": "Comida",
+        "walk": "Paseo",
+        "activity": "Actividad"
+      },
+      "errors": {
+        "under_18": "Nee Hao Fine Shyt es solo para mayores de 18 años.",
+        "need_photo": "Añade al menos una foto para aprobar.",
+        "missing_basics": "Completa tus datos básicos para aprobar.",
+        "bad_photo": "No se pudo usar esa foto. Prueba con otra.",
+        "bad_age_range": "La edad mínima no puede ser mayor que la máxima."
       }
     }
   },

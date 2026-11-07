@@ -71,6 +71,7 @@ export interface RedisLike {
   ): Promise<[string | number, string[]]>;
   pipeline(): RedisPipelineLike;
   smembers<T = string[]>(key: string): Promise<T>;
+  sismember(key: string, member: string): Promise<number>;
   scard(key: string): Promise<number>;
   sadd(key: string, ...members: string[]): Promise<number>;
   srem(key: string, ...members: string[]): Promise<number>;
@@ -407,6 +408,10 @@ class StandardRedisAdapter implements RedisLike {
 
   async smembers<T = string[]>(key: string): Promise<T> {
     return (await this.client.smembers(key)) as T;
+  }
+
+  async sismember(key: string, member: string): Promise<number> {
+    return await this.client.sismember(key, member);
   }
 
   async scard(key: string): Promise<number> {

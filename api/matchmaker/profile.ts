@@ -1,9 +1,10 @@
 /**
  * /api/matchmaker/profile
  *
- * GET    - Current match profile (draft + approved)
+ * GET    - Current profile (draft, approved, basics) + photos
  * PUT    - { action: "approve", text? } | { action: "pause" } | { action: "resume" }
- * DELETE - Leave Matchmaker (removes profile + pending match)
+ *          | { action: "basics", basics } | { action: "photos", photos }
+ * DELETE - Leave (removes profile, photos, and any pending match)
  */
 
 import { z } from "zod";
@@ -12,13 +13,23 @@ import * as RateLimit from "../_utils/_rate-limit.js";
 import { filterProfanityPreservingUrls } from "../_utils/_validation.js";
 import {
   extractTags,
+  getPhotos,
   getProfile,
+  isValidPhoto,
   leaveMatchmaker,
   MAX_PROFILE_CHARS,
   MIN_PROFILE_CHARS,
+  saveBasics,
   saveDraft,
+  savePhotos,
   saveProfile,
 } from "./_lib.js";
+import {
+  datingBasicsSchema,
+  isAdult,
+  MAX_PHOTOS,
+  missingBasics,
+} from "../../src/shared/dating.js";
 
 const bodySchema = z.discriminatedUnion("action", [
   z.object({
@@ -27,6 +38,8 @@ const bodySchema = z.discriminatedUnion("action", [
   }),
   z.object({ action: z.literal("pause") }),
   z.object({ action: z.literal("resume") }),
+  z.object({ action: z.literal("basics"), basics: datingBasicsSchema }),
+  z.object({ action: z.literal("photos"), photos: z.array(z.string()).max(MAX_PHOTOS) }),
 ]);
 
 export default apiHandler(
@@ -35,8 +48,16 @@ export default apiHandler(
     const username = user!.username;
     const method = (req.method || "GET").toUpperCase();
 
+    const respond = async () => {
+      const [profile, photos] = await Promise.all([
+        getProfile(redis, username),
+        getPhotos(redis, username),
+      ]);
+      res.status(200).json({ profile, photos });
+    };
+
     if (method === "GET") {
-      res.status(200).json({ profile: await getProfile(redis, username) });
+      await respond();
       return;
     }
 
@@ -68,6 +89,32 @@ export default apiHandler(
       }
     }
 
+    if (body.action === "basics") {
+      const b = body.basics;
+      if (b.birthdate && !isAdult(b.birthdate)) {
+        res.status(400).json({ error: "under_18" });
+        return;
+      }
+      const merged = { ...profile.basics, ...b };
+      if (merged.ageMin && merged.ageMax && merged.ageMin > merged.ageMax) {
+        res.status(400).json({ error: "bad_age_range" });
+        return;
+      }
+      await saveBasics(redis, username, b);
+      await respond();
+      return;
+    }
+
+    if (body.action === "photos") {
+      if (!body.photos.every(isValidPhoto)) {
+        res.status(400).json({ error: "bad_photo" });
+        return;
+      }
+      await savePhotos(redis, username, body.photos);
+      await respond();
+      return;
+    }
+
     if (body.action === "pause") {
       await saveProfile(redis, username, { ...profile, status: "paused" });
     } else if (body.action === "resume") {
@@ -82,6 +129,19 @@ export default apiHandler(
       );
       if (text.length < MIN_PROFILE_CHARS) {
         res.status(400).json({ error: "Profile is too short" });
+        return;
+      }
+      // Nobody joins the pool without complete basics, 18+, and a photo.
+      if (missingBasics(profile.basics).length > 0) {
+        res.status(400).json({ error: "missing_basics", missing: missingBasics(profile.basics) });
+        return;
+      }
+      if (!isAdult(profile.basics.birthdate!)) {
+        res.status(400).json({ error: "under_18" });
+        return;
+      }
+      if ((await getPhotos(redis, username)).length === 0) {
+        res.status(400).json({ error: "need_photo" });
         return;
       }
       let tags: string[];
@@ -104,6 +164,6 @@ export default apiHandler(
       });
     }
 
-    res.status(200).json({ profile: await getProfile(redis, username) });
+    await respond();
   }
 );

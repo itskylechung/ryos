@@ -4932,13 +4932,13 @@
       "title": "Winamp"
     },
     "matchmaker": {
-      "name": "Matchmaker",
-      "title": "Matchmaker",
-      "description": "每周为你介绍值得认识的人",
-      "signIn": "登录后即可使用 Matchmaker",
+      "name": "Nee Hao Fine Shyt",
+      "title": "Nee Hao Fine Shyt",
+      "description": "Ryo 帮你约到真正的约会",
+      "signIn": "登录后即可使用 Nee Hao Fine Shyt",
       "menu": {
-        "help": "Matchmaker 帮助",
-        "about": "关于 Matchmaker",
+        "help": "Nee Hao Fine Shyt 帮助",
+        "about": "关于 Nee Hao Fine Shyt",
         "refresh": "刷新"
       },
       "tabs": {
@@ -4956,52 +4956,125 @@
         "waiting": "你已同意，正在等待对方…",
         "youPassed": "你跳过了这次匹配。",
         "theyPassed": "这次对方跳过了。下周会有新的匹配。",
-        "intro": "Ryo 每周为你介绍一位值得认识的人——朋友或合作伙伴。",
+        "intro": "Ryo 帮你约到真正的约会，而不是聊个没完。先和 Ryo 一起设置你的个人资料吧。",
         "start": "开始",
-        "inPool": "你已加入。下一次匹配将在本周送达。",
+        "inPool": "一切就绪。约会计划即将推出：Ryo 会在这里帮你安排。",
         "paused": "匹配已暂停。可在“个人资料”标签页中恢复。"
       },
       "profile": {
-        "hint": "这是你的匹配对象会看到的内容。在你批准之前不会分享任何内容。",
-        "placeholder": "你在做什么、喜欢什么、想认识什么样的人…",
+        "hint": "这是你的约会对象会看到的内容。在你批准之前不会显示给任何人。",
+        "placeholder": "你喜欢什么、理想的第一次约会、想要的感觉…",
         "approve": "批准",
         "approved": "已批准 ✓",
         "pause": "暂停",
         "resume": "恢复",
-        "leave": "退出 Matchmaker"
+        "leave": "退出 Nee Hao Fine Shyt",
+        "photos": "照片",
+        "addPhoto": "添加照片",
+        "removePhoto": "移除照片",
+        "name": "名字",
+        "birthdate": "生日",
+        "gender": "我是",
+        "interestedIn": "想认识",
+        "ageRange": "年龄范围",
+        "district": "行政区（台北）",
+        "availability": "通常有空",
+        "dateStyles": "喜欢的第一次约会",
+        "dealbreakers": "雷区",
+        "dealbreakersPlaceholder": "选填，例如：抽烟",
+        "about": "关于我",
+        "needs": "批准前还需要：{{items}}",
+        "needPhoto": "添加一张照片",
+        "needBasics": "完成基本资料",
+        "needAbout": "写一点关于你自己"
       },
       "interview": {
-        "intro": "Ryo 会问你几个问题并起草你的个人资料。分享之前你都可以先审阅。",
+        "intro": "Ryo 会问你几个问题来设置约会资料。在你批准之前，任何人都看不到。",
         "begin": "开始",
-        "kickoff": "嗨 ryo，帮我设置一下匹配资料",
+        "kickoff": "嗨 ryo，帮我设置约会资料",
         "draftSaved": "资料草稿已更新——请查看“个人资料”",
-        "savingDraft": "正在更新你的资料…"
+        "savingDraft": "正在更新你的资料…",
+        "call": "给 Ryo 打电话"
       },
       "help": {
         "interview": {
-          "title": "访谈",
-          "description": "和 Ryo 聊聊你在做什么、想认识什么样的人"
+          "title": "给 Ryo 打电话",
+          "description": "和 Ryo 聊聊来设置你的约会资料"
         },
         "approve": {
-          "title": "批准个人资料",
-          "description": "Ryo 起草一份简短资料；在你编辑并批准之前不会分享"
+          "title": "批准你的资料",
+          "description": "添加照片、确认基本资料后批准；在你批准之前不会显示"
         },
         "weeklyMatch": {
-          "title": "每周匹配",
-          "description": "Ryo 每周为你介绍一个人，并说明你们为什么应该认识"
+          "title": "真正的约会",
+          "description": "Ryo 直接安排时间和地点，而不是聊个没完"
         },
         "doubleOptIn": {
-          "title": "双向确认",
-          "description": "如果你们都同意，Ryo 会开启一个带开场白的私人聊天"
+          "title": "双方都同意",
+          "description": "只有你们都同意，约会才会成立"
         },
         "pauseLeave": {
-          "title": "暂停或退出",
-          "description": "随时暂停匹配，或退出以删除你的资料"
+          "title": "暂停或离开",
+          "description": "随时可以暂停，或离开并删除你的资料和照片"
         }
       },
       "sidebar": {
         "ryo": "Ryo",
         "matches": "匹配"
+      },
+      "call": {
+        "listening": "正在听…",
+        "thinking": "Ryo 正在思考…",
+        "talking": "Ryo 正在说话… 轻点即可插话",
+        "connecting": "正在连接…",
+        "hangUp": "挂断"
+      },
+      "genders": {
+        "woman": "女生",
+        "man": "男生",
+        "nonbinary": "非二元"
+      },
+      "districts": {
+        "zhongzheng": "中正区",
+        "datong": "大同区",
+        "zhongshan": "中山区",
+        "songshan": "松山区",
+        "daan": "大安区",
+        "wanhua": "万华区",
+        "xinyi": "信义区",
+        "shilin": "士林区",
+        "beitou": "北投区",
+        "neihu": "内湖区",
+        "nangang": "南港区",
+        "wenshan": "文山区"
+      },
+      "days": {
+        "mon": "一",
+        "tue": "二",
+        "wed": "三",
+        "thu": "四",
+        "fri": "五",
+        "sat": "六",
+        "sun": "日"
+      },
+      "dayParts": {
+        "morning": "上午",
+        "afternoon": "下午",
+        "evening": "晚上"
+      },
+      "dateStyles": {
+        "coffee": "咖啡",
+        "drinks": "小酌",
+        "food": "吃饭",
+        "walk": "散步",
+        "activity": "活动"
+      },
+      "errors": {
+        "under_18": "Nee Hao Fine Shyt 仅限 18 岁以上使用。",
+        "need_photo": "请至少添加一张照片才能批准。",
+        "missing_basics": "请完成基本资料才能批准。",
+        "bad_photo": "这张照片无法使用，请换一张。",
+        "bad_age_range": "最低年龄不能高于最高年龄。"
       }
     }
   },

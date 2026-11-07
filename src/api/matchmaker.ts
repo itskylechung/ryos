@@ -1,4 +1,5 @@
 import { apiRequest } from "@/api/core";
+import type { DatingBasics } from "@/shared/dating";
 
 export type MatchStatus = "none" | "active" | "paused";
 export type MatchResponse = "pending" | "accepted" | "declined";
@@ -8,8 +9,11 @@ export interface MatchProfile {
   approved: string | null;
   tags: string[];
   status: MatchStatus;
+  basics: DatingBasics;
   updatedAt: number;
 }
+
+type ProfileResponse = { profile: MatchProfile; photos: string[] };
 
 export interface MatchDrop {
   partner: string;
@@ -24,12 +28,16 @@ export interface MatchDrop {
 }
 
 export const getMatchProfile = () =>
-  apiRequest<{ profile: MatchProfile }>({ path: "/api/matchmaker/profile" });
+  apiRequest<ProfileResponse>({ path: "/api/matchmaker/profile" });
 
 export const updateMatchProfile = (
-  body: { action: "approve"; text?: string } | { action: "pause" | "resume" }
+  body:
+    | { action: "approve"; text?: string }
+    | { action: "pause" | "resume" }
+    | { action: "basics"; basics: DatingBasics }
+    | { action: "photos"; photos: string[] }
 ) =>
-  apiRequest<{ profile: MatchProfile }>({
+  apiRequest<ProfileResponse>({
     path: "/api/matchmaker/profile",
     method: "PUT",
     body,

@@ -315,6 +315,8 @@ export const redisKeys = {
     /** Agent-written draft, kept apart from the profile record so draft saves never race approvals. */
     matchDraft: (username: string) =>
       redisKey("agent", "matchmaker", "user", username, "draft"),
+    matchPhotos: (username: string) =>
+      redisKey("agent", "matchmaker", "user", username, "photos"),
     matchDrop: (username: string) =>
       redisKey("agent", "matchmaker", "user", username, "drop"),
     matchSeen: (username: string) =>
@@ -322,9 +324,12 @@ export const redisKeys = {
     matchBlocked: (username: string) =>
       redisKey("agent", "matchmaker", "user", username, "blocked"),
     matchPool: () => redisKey("agent", "matchmaker", "pool"),
-    /** Held for the duration of one weekly drop run so overlapping runs can't double-pair. */
-    matchDropLock: () => redisKey("agent", "matchmaker", "drop-lock"),
-    /** Hash of `{ [username]: "accepted" | "declined", roomId }` for one weekly pair. */
+    /** Set of private room ids opened for a match; @ryo there runs the date concierge. */
+    matchRooms: () => redisKey("agent", "matchmaker", "rooms"),
+    /** Current date proposal (JSON) for one match room. */
+    matchProposal: (roomId: string) =>
+      redisKeyCaseSensitive("agent", "matchmaker", "room", roomId, "proposal"),
+    /** Hash of `{ [username]: "accepted" | "declined", roomId }` for one match. */
     matchPair: (a: string, b: string, createdAt: number) =>
       redisKey("agent", "matchmaker", "pair", ...[a, b].sort(), createdAt),
     matchRoomLock: (a: string, b: string, createdAt: number) =>

@@ -1,14 +1,16 @@
 import { describe, expect, test } from "bun:test";
 import {
+  createMatch,
   getDrop,
+  getPhotos,
   getProfile,
   leaveMatchmaker,
   respondToDrop,
-  runWeeklyDrop,
+  saveBasics,
   saveDraft,
+  savePhotos,
   saveProfile,
   type ScoredPair,
-  type WeeklyDropStats,
 } from "../../../api/matchmaker/_lib";
 import { redisKeys } from "../../../src/shared/redisKeys";
 import type { Redis } from "../../../api/_utils/redis";
@@ -39,38 +41,34 @@ function fakeRedis(): Redis {
 }
 
 const join = (redis: Redis, username: string, tags: string[], status: "active" | "paused" = "active") =>
-  saveProfile(redis, username, { draft: null, approved: `i am ${username}`, tags, status, updatedAt: 0 });
+  saveProfile(redis, username, { draft: null, approved: `i am ${username}`, tags, status, basics: {}, updatedAt: 0 });
 
-const run = async (redis: Redis, opts: Parameters<typeof runWeeklyDrop>[1] = {}) =>
-  (await runWeeklyDrop(redis, { judge, ...opts })) as WeeklyDropStats;
-
-// Deterministic judge: likes pairs that share the first tag.
-const judge = async (a: { username: string }, b: { username: string }): Promise<ScoredPair> => ({
-  a: a.username,
-  b: b.username,
-  score: a.username[0] === b.username[0] ? 90 : 30,
+const pair = (a: string, b: string): ScoredPair => ({
+  a,
+  b,
+  score: 90,
   why: "you both build things",
-  openerFromA: `hi from ${a.username}`,
-  openerFromB: `hi from ${b.username}`,
+  openerFromA: `hi from ${a}`,
+  openerFromB: `hi from ${b}`,
 });
 
-describe("matchmaker weekly flow", () => {
-  test("drop → both accept → exactly one room, even when accepts race", async () => {
+/** Match two pool members the way the date-plan flow will. */
+const match = (redis: Redis, a: string, b: string) =>
+  createMatch(redis, pair(a, b), { a: `i am ${a}`, b: `i am ${b}` });
+
+describe("matchmaker match flow", () => {
+  test("match → both accept → exactly one room, even when accepts race", async () => {
     const redis = fakeRedis();
     await join(redis, "ann", ["synth"]);
     await join(redis, "amy", ["synth"]);
-    await join(redis, "bob", ["knit"]);
-    await join(redis, "pat", ["synth"], "paused");
+    await match(redis, "ann", "amy");
 
-    const stats = await run(redis);
-    expect(stats).toMatchObject({ eligible: 3, matched: 1 });
     expect((await getDrop(redis, "ann"))?.partner).toBe("amy");
+    expect((await getDrop(redis, "amy"))?.partnerProfile).toBe("i am ann");
     // Each side gets the icebreaker written in their own voice.
-    const pairOpeners = [(await getDrop(redis, "ann"))?.opener, (await getDrop(redis, "amy"))?.opener];
-    expect(pairOpeners.sort()).toEqual(["hi from amy", "hi from ann"]);
-    expect((await getDrop(redis, "ann"))?.opener).toMatch(/ann/);
-    expect(await getDrop(redis, "bob")).toBeNull(); // weak match → no drop
-    expect(await getDrop(redis, "pat")).toBeNull(); // paused → not paired
+    expect((await getDrop(redis, "ann"))?.opener).toBe("hi from ann");
+    expect((await getDrop(redis, "amy"))?.opener).toBe("hi from amy");
+    expect(await redis.smembers(redisKeys.agent.matchSeen("ann"))).toContain("amy");
 
     const rooms: string[][] = [];
     const openRoom = async (_r: Redis, members: string[]) => (rooms.push(members), "room-1");
@@ -81,18 +79,13 @@ describe("matchmaker weekly flow", () => {
     expect(rooms).toHaveLength(1);
     expect(annView?.myResponse).toBe("accepted");
     expect((await getDrop(redis, "amy"))?.roomId).toBe("room-1");
-
-    // Rerun within the week is a no-op; next week they are never re-paired.
-    expect((await run(redis)).matched).toBe(0);
-    const later = Date.now() + 8 * 24 * 60 * 60 * 1000;
-    expect((await run(redis, { now: later })).matched).toBe(0);
   });
 
-  test("decline never opens a room; block stops future pairing", async () => {
+  test("decline never opens a room; block is recorded", async () => {
     const redis = fakeRedis();
     await join(redis, "ann", ["synth"]);
     await join(redis, "amy", ["synth"]);
-    await run(redis);
+    await match(redis, "ann", "amy");
 
     let opened = false;
     const openRoom = async () => ((opened = true), "x");
@@ -100,15 +93,17 @@ describe("matchmaker weekly flow", () => {
     const amy = await respondToDrop(redis, "amy", "accept", openRoom);
     expect(opened).toBe(false);
     expect(amy?.partnerResponse).toBe("declined");
+    expect(await redis.smembers(redisKeys.agent.matchBlocked("ann"))).toContain("amy");
   });
 
-  test("an overlapping run is skipped instead of double-pairing", async () => {
+  test("basics merge piece by piece without touching approval", async () => {
     const redis = fakeRedis();
     await join(redis, "ann", ["synth"]);
-    await join(redis, "amy", ["synth"]);
-    await redis.set(redisKeys.agent.matchDropLock(), "1", { nx: true });
-    expect(await runWeeklyDrop(redis, { judge })).toEqual({ skipped: "already-running" });
-    expect(await getDrop(redis, "ann")).toBeNull();
+    await saveBasics(redis, "ann", { name: "Ann", district: "xinyi" });
+    await saveBasics(redis, "ann", { availability: ["fri-evening"] });
+    const profile = await getProfile(redis, "ann");
+    expect(profile.basics).toEqual({ name: "Ann", district: "xinyi", availability: ["fri-evening"] });
+    expect(profile).toMatchObject({ status: "active", approved: "i am ann" });
   });
 
   test("agent draft saves never clobber an approval made meanwhile", async () => {
@@ -120,22 +115,24 @@ describe("matchmaker weekly flow", () => {
     expect(await redis.smembers(redisKeys.agent.matchPool())).toContain("ann");
   });
 
-  test("leaving removes the partner's copy of your profile too", async () => {
+  test("leaving removes your photos and the partner's copy of your profile", async () => {
     const redis = fakeRedis();
     await join(redis, "ann", ["synth"]);
     await join(redis, "amy", ["synth"]);
-    await run(redis);
+    await savePhotos(redis, "ann", ["data:image/jpeg;base64,AAAA"]);
+    await match(redis, "ann", "amy");
     expect((await getDrop(redis, "amy"))?.partnerProfile).toBe("i am ann");
     await leaveMatchmaker(redis, "ann");
     expect(await getDrop(redis, "amy")).toBeNull();
     expect(await getDrop(redis, "ann")).toBeNull();
+    expect(await getPhotos(redis, "ann")).toEqual([]);
   });
 
   test("a failed room creation releases the lock so a retry can succeed", async () => {
     const redis = fakeRedis();
     await join(redis, "ann", ["synth"]);
     await join(redis, "amy", ["synth"]);
-    await run(redis);
+    await match(redis, "ann", "amy");
     await respondToDrop(redis, "ann", "accept");
     const boom = async (): Promise<string> => {
       throw new Error("redis blip");
