@@ -259,7 +259,10 @@ export default apiHandler<SpeechRequest>(
           return;
         }
 
-        const elevenlabsVoiceId = voice_id || DEFAULT_ELEVENLABS_VOICE_ID;
+        // ELEVENLABS_VOICE_ID: self-hosts whose ElevenLabs account can't
+        // reach Ryo's voices pick one of their own; unset keeps Ryo PVC.
+        const elevenlabsVoiceId =
+          voice_id || process.env.ELEVENLABS_VOICE_ID?.trim() || DEFAULT_ELEVENLABS_VOICE_ID;
         audioData = await generateElevenLabsSpeech({
           text: synthesisText,
           voiceId: elevenlabsVoiceId,
