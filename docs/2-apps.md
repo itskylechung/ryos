@@ -1,6 +1,6 @@
 # Apps
 
-ryOS includes 29 built-in applications, each designed to replicate classic desktop experiences while adding modern functionality.
+ryOS includes 30 built-in applications, each designed to replicate classic desktop experiences while adding modern functionality.
 
 Registry IDs and docs slugs mostly match; Applet Store is registered as `applet-viewer`, and Virtual PC is registered as `pc`.
 
@@ -36,6 +36,7 @@ Registry IDs and docs slugs mostly match; Applet Store is registered as `applet-
 | [Maps](/docs/maps) | Apple MapKit search and pins; national Taiwan YouBike overlay; in-map YouBike directions and spoken navigation; driving directions open in Apple Maps | Utilities |
 | [Stuff](/docs/stuff) | Wooden inventory shelf with barcodes, tags, locations, cutout covers, sharing, and print labels | Productivity |
 | [Calculator](/docs/calculator) | Basic, scientific, and unit conversion calculator | Utilities |
+| [Nee Hao Fine Shyt](/docs/matchmaker) | Dating in Taipei built to get you on real dates: a voice onboarding call with Ryo, photos, and date plans | Communication |
 | [Admin](/docs/admin) | Admin-only panel for users, chat-room moderation, song library, server health, and Cursor agent telemetry | System |
 
 ## App Architecture
